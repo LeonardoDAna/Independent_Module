@@ -1,0 +1,61 @@
+.el-submenu__title {
+    text-align: left;
+    background-color: #717084;
+    color: white !important;
+    font-size: 16px;
+    line-height: 30px;
+}
+.el-submenu__title:hover {
+    background-color: #343166 !important;
+    color: white;
+}
+.el-menu {
+    .el-submenu__title {
+        font-size: 16px;
+        .el-menu-item-group {
+            font-size: 16px;
+        }
+    }
+}
+.el-menu-item-group {
+    .el-menu-item {
+        height: 60px;
+        line-height: 60px;
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+.el-menu-item-group {
+    text-align: left;
+    width: 250px;
+    background-color: #d2d2d8;
+    color: black;
+    .el-menu-item {
+        color: black;
+    }
+}
+.el-dialog__headerbtn .el-dialog__close {
+    color: white;
+}
+.el-dialog__header {
+    background-color: #8e8db0;
+    text-align: center;
+    span {
+        color: white;
+        font-size: 30px;
+    }
+}
+.el-dialog__body {
+    background-color: #faf2d7;
+}
+.el-menu-item:hover {
+    background-color: #21242c !important;
+}
+.el-menu-item:focus {
+    background-color: #21242c !important;
+}
+.el-button--primary {
+    background-color: #8e8db0 !important;
+    border: 1px solid #8e8db0 !important;
+}

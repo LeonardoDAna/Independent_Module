@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+  <TITLE>常用于后台的JS多级树形目录 - www.webdm.cn</TITLE>
+  <META http-equiv=Content-Type content="text/html; charset=UTF-8">
+  <style>
+    td {
+      text-align: left;
+      font-size: 9pt
+    }
+
+    a {
+      text-decoration: none
+    }
+  </style>
+</HEAD>
+<SCRIPT LANGUAGE="JavaScript">
+  function ShowSub(theId) {
+    theFo = eval("fold_" + theId);
+    if (theFo.style.display == "none") {
+      theFo.style.display = "block";
+    } else {
+      theFo.style.display = "none";
+    }
+    /*
+    	for (i = 0; i < 7; i++) 
+    	{
+    	if (i == theId)
+    	continue;
+    	theFo = eval("tr_" + i);
+    	theFo.style.display = "none";
+    	}*/
+  }
+  //-->
+</SCRIPT>
+
+<BODY>
+  <table>
+    <!--主目录1-->
+    <tr>
+      <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+        <a href="javascript:ShowSub('0')">软件下载</a></td>
+    </tr>
+    <!--主目录1下->1级子目录1-->
+    <tr id='fold_0' style="display:none">
+      <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+      <!--缩进-->
+      <td>
+        <table>
+          <!--2级子目录0_01-->
+          <tr>
+            <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+              <a href="javascript:ShowSub('0_01')">常用工具</td>
+          </tr>
+          <tr id='fold_0_01' style="display:none">
+            <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+            <!--缩进-->
+            <td>
+              <table>
+                <!--3级子目录0_01_01-->
+                <tr>
+                  <td colspan=2><img src="foldericon.gif" WIDTH="16" HEIGHT="16">
+                    <a href="javascript:ShowSub('0_01_01')">输入法</td>
+                </tr>
+                <tr id='fold_0_01_01' style="display:none">
+                  <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+                  <!--缩进-->
+                  <td>
+                    智能ABC<br>
+                    万能五笔<br>
+                    智能五笔<br>
+                  </td>
+                </tr>
+                <!--3级子目录0_01_02-->
+                <tr>
+                  <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+                    <a href="javascript:ShowSub('0_01_02')">杀毒软件</td>
+                </tr>
+                <tr id='fold_0_01_02' style="display:none">
+                  <td width='13px' background='line1.gif'></td>
+                  <!--缩进-->
+                  <td>
+                    软件补丁<br>
+                    病毒库<br>
+                    病毒信息<br>
+                  </td>
+                </tr>
+                <!--3级子目录0_01_03-->
+                <tr>
+                  <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+                    <a href="javascript:ShowSub('0_01_03')">压缩解压</td>
+                </tr>
+                <tr id='fold_0_01_03' style="display:none">
+                  <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+                  <!--缩进-->
+                  <td>
+                    winZip<br>
+                    winRar<br>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!--2级子目录0_02-->
+          <tr>
+            <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+              <a href="javascript:ShowSub('0_02')">系统工具</td>
+          </tr>
+          <tr id='fold_0_02' style="display:none">
+            <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+            <!--缩进-->
+            <td>
+              <table>
+                <!--3级子目录0_02_01-->
+                <tr>
+                  <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+                    <a href="javascript:ShowSub('0_02_01')">系统维护</td>
+                </tr>
+                <tr id='fold_0_02_01' style="display:none">
+                  <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+                  <!--缩进-->
+                  <td>
+                    磁盘修复<br>
+                    磁盘清理<br>
+                    系统修复<br>
+                  </td>
+                </tr>
+                <!--3级子目录0_02_02-->
+                <tr>
+                  <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+                    <a href="javascript:ShowSub('0_02_02')">系统测试</td>
+                </tr>
+                <tr id='fold_0_02_02' style="display:none">
+                  <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+                  <!--缩进-->
+                  <td>
+                    硬件检测<br>
+                    性能测试<br>
+                  </td>
+                </tr>
+                <!--3级子目录0_02_03-->
+                <tr>
+                  <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+                    <a href="javascript:ShowSub('0_02_03')">系统补丁</td>
+                </tr>
+                <tr id='fold_0_02_03' style="display:none">
+                  <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+                  <!--缩进-->
+                  <td>
+                    windows2000补丁<br>
+                    windows2003补丁<br>
+                    windowsXp补丁
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+    <!--主目录2-->
+    <tr>
+      <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+        <a href="javascript:ShowSub('1')">硬件资讯</a></td>
+    </tr>
+    <!--主目录1下->1级子目录1-->
+    <tr id='fold_1' style="display:none">
+      <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+      <!--缩进-->
+      <td>
+        <table>
+          <!--2级子目录1_01-->
+          <tr>
+            <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+              <a href="javascript:ShowSub('1_01')">产业资讯</td>
+          </tr>
+          <tr id='fold_1_01' style="display:none">
+            <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+            <!--缩进-->
+            <td>
+              国内业界<br>
+              国际业界<br>
+              热门专题<br>
+            </td>
+          </tr>
+          <!--2级子目录1_02-->
+          <tr>
+            <td colspan=2><img src="http://www.webdm.cn/images/20100106/foldericon.gif" WIDTH="16" HEIGHT="16">
+              <a href="javascript:ShowSub('1_02')">今日报价</td>
+          </tr>
+          <tr id='fold_1_02' style="display:none">
+            <td width='13px' background='http://www.webdm.cn/images/20100106/line1.gif'></td>
+            <!--缩进-->
+            <td>
+              笔记本<br>台式机<br>MP3
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</BODY>
+
+</HTML>
+<br />
+<a href="http://www.webdm.cn">网页代码站</a> - 最专业的代码下载网站 - 致力为中国站长提供有质量的代码！
