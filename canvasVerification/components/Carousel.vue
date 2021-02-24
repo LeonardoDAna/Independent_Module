@@ -11,7 +11,7 @@
       :visible.sync="dialogVisible"
       width="30%"
     >
-      <div class="canvas-wrap">
+      <div slot class="canvas-wrap">
         <canvas
           id="canvas"
           style="width: 300px; height: 100px"
@@ -50,13 +50,16 @@ export default {
     };
   },
   created() {
-    this.drawPic();
+    // this.drawPic();
   },
   mounted() {},
   methods: {
     showVerification() {
       this.dialogVisible = true;
-      this.drawPic();
+      // dialog 组件是懒加载的  需要在页面展示的时候加上 this.$nextTick(()=>{})
+      this.$nextTick(() => {
+        this.drawPic();
+      });
     },
     // 点击更换验证码
     change: function () {
