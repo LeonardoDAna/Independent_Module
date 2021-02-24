@@ -12,26 +12,28 @@
       width="30%"
     >
       <div class="canvas-wrap">
-        <canvas id="canvas" @click="change"></canvas>
+        <canvas
+          id="canvas"
+          style="width: 300px; height: 100px"
+          @click="change"
+        ></canvas>
       </div>
+      <!-- <div class="canvas-wrap"> -->
+      <!-- <canvas id="otherCanvas" style="width:300px;height:100px" @click="change"></canvas> -->
+      <!-- </div> -->
       <div class="code-input-wrap">
-        <input
-          type="number"
-          placeholder="请输入"
-          class="code-input-item"
-          bindinput="getInputVal"
-          maxlength="2"
-          :value="inputResult"
-        />
+        <el-input-number
+          v-model="inputResult"
+          @change="getInputVal"
+          label="描述文字"
+        ></el-input-number>
       </div>
-      <div class="code-button-wrap">
+      <!-- <div class="code-button-wrap">
         <div bindtap="confirmCode" class="code-btn-confirm">确定</div>
-      </div>
+      </div> -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="confirmCode">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -44,6 +46,7 @@ export default {
       dialogVisible: false,
       inputResult: null,
       actualResult: null,
+      inputResult: null,
     };
   },
   created() {
@@ -53,6 +56,7 @@ export default {
   methods: {
     showVerification() {
       this.dialogVisible = true;
+      this.drawPic();
     },
     // 点击更换验证码
     change: function () {
@@ -76,10 +80,12 @@ export default {
       var canvas = document.getElementById("canvas");
       console.log(canvas);
       var ctx = canvas.getContext("2d");
+      // var ctx = otherCanvas.getContext("2d");
       /**绘制背景色**/
       ctx.fillStyle = this.randomColor(180, 240); //颜色若太深可能导致看不清
-      ctx.fillRect(0, 0, 110, 36);
+      // ctx.fillRect(0, 0, 110, 36);
       // ctx.fillRect(0, 0, 220, 100)
+      ctx.fillRect(0, 0, 300, 150);
       /**绘制文字**/
       var arr;
       var text = "";
@@ -121,7 +127,7 @@ export default {
             break;
         }
         ctx.fillStyle = this.randomColor(50, 160); //随机生成字体颜色
-        ctx.font = this.randomNum(20, 26) + "px SimHei"; //随机生成字体大小
+        ctx.font = this.randomNum(40, 52) + "px SimHei"; //随机生成字体大小
         var x = 5 + i * 20;
         var y = this.randomNum(25, 29);
         var deg = this.randomNum(-20, 20);
@@ -130,7 +136,9 @@ export default {
         if (i == 0 || i == 2) {
           ctx.rotate((deg * Math.PI) / 180);
         }
-        ctx.fillText(txt, 5, 0);
+
+        ctx.textAlign = "center";
+        ctx.fillText(txt, 100, 50);
         text = text + txt;
         //恢复坐标原点和旋转角度
         if (i == 0 || i == 2) {
@@ -153,50 +161,27 @@ export default {
       //     ctx.arc(this.randomNum(0, 90), this.randomNum(0, 28), 1, 0, 2 * Math.PI);
       //     ctx.fill();
       // }
-      ctx.draw();
+      // ctx.draw();
     },
     // 获取输入验证码
-    getInputVal(e) {
-      this.setData({
-        inputResult: e.detail.value,
-      });
-    },
+    getInputVal(e) {},
     // 验证输入验证码
     confirmCode() {
-      if (this.data.inputResult === "") {
-        wx.showToast({
-          title: "请输入结果",
-          icon: "none",
-          duration: 1500,
-        });
+      if (this.inputResult === "") {
+        this.$message.warning("请输入结果");
         return;
       }
-      if (this.data.inputResult != this.data.actualResult) {
-        wx.showToast({
-          title: "输入错误",
-          icon: "none",
-          duration: 1500,
-        });
-        this.setData({
-          inputResult: "",
-        });
+      if (this.inputResult != this.actualResult) {
+        this.$message.error("输入错误");
+
+        this.inputResult = "";
+
         this.drawPic();
       } else {
-        // wx.showToast({
-        //   title: '输入正确',
-        //   icon: 'success',
-        //   duration: 1500
-        // });
-        // this.surenumber()
-        this.setData({
-          codeDialogShow: false,
-          inputResult: "",
-        });
-        if (this.data.codeEntrance == 2) {
-          this.surenumber();
-        } else {
-          this.openScan();
-        }
+        this.$message.success("验证成功");
+        this.dialogVisible = false;
+        this.codeDialogShow = false;
+        this.inputResult = "";
       }
     },
   },
@@ -214,15 +199,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-canvas {
-  width: 220px;
-  height: 60px;
-  border-radius: 28px;
-  /* width: 110px;
-  height: 36px;
-  border-radius: 14px; */
 }
 
 .code-input-wrap {
