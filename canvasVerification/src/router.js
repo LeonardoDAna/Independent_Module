@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Carousel from '../components/Carousel.vue'
 import dateTools from '../components/dateTools.vue'
 import login from '../components/login/login.vue'
+import overflowAuto from '../src/view/overflowAuto.vue'
 
 
 const router = new VueRouter({
@@ -19,6 +20,11 @@ const router = new VueRouter({
             path: '/dateTools',
             name: "dateTools",
             component: dateTools,
+        },
+        {
+            path: '/overflowAuto',
+            name: "overflowAuto",
+            component: overflowAuto,
         }
     ]
 })
