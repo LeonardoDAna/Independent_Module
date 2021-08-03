@@ -6,6 +6,10 @@ export let datas = [{
     name: "日历组件",
     Tag: ["js"],
     path: "/dateTools"
+  }, {
+    name: "overflowAuto",
+    Tag: ["js"],
+    path: "/overflowAuto"
   }
 
 ]
