@@ -56,7 +56,6 @@
     padding: 0;
     margin: 0;
     overflow-y: auto;
-
     li {
       list-style: none;
       height: 100px;
