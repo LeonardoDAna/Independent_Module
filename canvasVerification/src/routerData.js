@@ -13,5 +13,6 @@ export let datas = [{
 }, {
   name: "展示父子组件渲染生命周期",
   Tag: ["js"],
-  path: "/overflowAuto"
-}]
+  path: "/lifecycle"
+}
+]

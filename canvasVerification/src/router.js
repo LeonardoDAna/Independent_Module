@@ -4,6 +4,7 @@ import Carousel from '../components/Carousel.vue'
 import dateTools from '../components/dateTools.vue'
 import login from '../components/login/login.vue'
 import overflowAuto from '../src/view/overflowAuto.vue'
+import lifecycle from '../src/view/lifecycle/parent.vue'
 
 
 const router = new VueRouter({
@@ -25,6 +26,11 @@ const router = new VueRouter({
             path: '/overflowAuto',
             name: "overflowAuto",
             component: overflowAuto,
+        },
+        {
+            path: '/lifecycle',
+            name: "parent",
+            component: lifecycle,
         }
     ]
 })
