@@ -1,0 +1,75 @@
+//风格主题色
+$fff: rgb(255, 255, 255); //背景色
+$gary:#c0c4cc;
+
+// 色值  字体色、背景色、边框色
+$colors: ("fff": $fff,
+  "gary": $gary,
+);
+
+@each $key,
+$val in $colors {
+  .fc-#{$key} {
+    color: $val;
+  }
+
+  .bg-#{$key} {
+    background-color: $val;
+  }
+
+  .bdc-#{$key} {
+    border-color: $val;
+  }
+}
+/*  flex布局 */
+.row {
+  display: flex;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+/* // 内联块状元素 */
+.inlineBlock{
+  display: inline-block;
+}
+.wrap {
+  flex-wrap: wrap;
+}
+
+.flex-other {
+  flex: 1;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.align-top {
+  align-items: flex-start;
+}
+
+.align-middle {
+  align-items: center;
+}
+
+.align-bottom {
+  align-items: flex-end;
+}
