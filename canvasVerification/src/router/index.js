@@ -5,6 +5,7 @@ import dateTools from '@/components/dateTools.vue'
 import home from '@/view/homePage/index.vue'
 import overflowAuto from '@/view/overflowAuto.vue'
 import magnifyingGlass from '@/view/magnifyingGlass/index.vue'
+import canvasParticle from '@/view/canvasParticle/index.vue'
 // import lifecycle from '../src/view/lifecycle/parent.vue'
 
 
@@ -34,11 +35,11 @@ const router = new VueRouter({
       name: "magnifyingGlass",
       component: magnifyingGlass,
     },
-    // {
-    //   path: '/lifecycle',
-    //   name: "parent",
-    //   component: lifecycle,
-    // }
+    {
+      path: '/canvasParticle',
+      name: "canvasParticle",
+      component: canvasParticle,
+    }
   ]
 })
 // 导出
