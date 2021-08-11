@@ -45,5 +45,12 @@ export let routerDatas = [{
     path: "/canvasSignature",
     component: () => import("@/view/canvasSignature/index.vue"),
     label: "",
+  },
+  {
+    name: "颜色选择器",
+    Tag: ["js"],
+    path: "/colorPicker",
+    component: () => import("@/view/colorPicker/index.vue"),
+    label: "",
   }
 ]

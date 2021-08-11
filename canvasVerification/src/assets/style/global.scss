@@ -2,8 +2,7 @@
 $fff: rgb(255, 255, 255); //背景色
 $gary:#c0c4cc;
 $defSize: 16;
-$sSizes: (
-  0: 0 / $defSize + rem,
+$sSizes: (0: 0 / $defSize + rem,
   2: 2 / $defSize + rem,
   3: 3 / $defSize + rem,
   4: 4 / $defSize + rem,
@@ -166,4 +165,8 @@ $val in $colors {
 
 .align-bottom {
   align-items: flex-end;
+}
+
+.flex-direction {
+  flex-direction: column;
 }

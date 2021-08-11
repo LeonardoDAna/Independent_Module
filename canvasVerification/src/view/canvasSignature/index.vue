@@ -2,7 +2,11 @@
   <!-- 电子签名 -->
   <div>
     字体颜色
-    <input type="text" v-model="lineStyle.color" />
+    <input
+      type="text"
+      v-model="lineStyle.color"
+      @onchange="changeColorList(e)"
+    />
     字体粗细
     <input type="text" v-model="lineStyle.weight" />
     <br />
@@ -41,6 +45,9 @@ export default {
     };
   },
   methods: {
+    changeColorList(e) {
+      this.lineStyle.color = e;
+    },
     // 生成图片
     createImg() {
       //将生成的图片赋给img元素
