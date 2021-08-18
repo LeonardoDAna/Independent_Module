@@ -52,5 +52,11 @@ export let routerDatas = [{
     path: "/colorPicker",
     component: () => import("@/view/colorPicker/index.vue"),
     label: "",
+  }, {
+    name: "下拉选择框",
+    Tag: ["js"],
+    path: "/selectOption",
+    component: () => import("@/view/select/index.vue"),
+    label: "",
   }
 ]

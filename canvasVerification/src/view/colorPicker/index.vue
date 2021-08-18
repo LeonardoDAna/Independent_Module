@@ -9,7 +9,7 @@
         <div class="thirdFloor"></div>
       </div>
     </div>
-    <div class="progressBar row my-mt-20" ref="progressBar">
+    <!-- <div class="progressBar row my-mt-20" ref="progressBar">
       <div class="pickerBtn" ref="pickerBtn"></div>
       <div
         class="colorItem"
@@ -17,7 +17,7 @@
         :key="index"
         :style="{ backgroundColor: item }"
       ></div>
-    </div>
+    </div> -->
     <div class="colorBar my-mt-30" ref="colorBar">
       <div class="pickerBtn" ref="colorPickerBtn"></div>
     </div>
@@ -60,17 +60,21 @@ export default {
       this.$refs.colorBar.addEventListener("mousemove", (event) => {
         this.pickerDistance = event.clientX - this.colorBar.offsetLeft;
         if (
-          0 < this.pickerDistance &&
+          0 <= this.pickerDistance &&
           this.pickerDistance < this.$refs.colorBar.clientWidth
         ) {
           this.$refs.colorPickerBtn.style.left =
             this.pickerDistance - 10 + "px";
+          let x =
+            (this.pickerDistance / this.$refs.colorBar.clientWidth) *
+            this.colorList.length;
+            this.pickerDistance = ~~x
         }
       });
       this.$refs.colorPickerBtn.addEventListener("mouseup", (event) => {});
     },
     initColorList() {
-      this.bindProgressMoveFn();
+      // this.bindProgressMoveFn();
       this.bindColorListMoveFn();
       for (let i = 0; i <= 255; i++) {
         let value = `rgba(255,${i},0)`;
@@ -97,8 +101,8 @@ export default {
         this.colorList.push(value);
       }
       this.$nextTick(() => {
-        this.progressBar.offsetLeft = this.$refs.progressBar.offsetLeft;
-        this.progressBar.offsetTop = this.$refs.progressBar.offsetTop;
+        // this.progressBar.offsetLeft = this.$refs.progressBar.offsetLeft;
+        // this.progressBar.offsetTop = this.$refs.progressBar.offsetTop;
         this.colorBar.offsetLeft = this.$refs.colorBar.offsetLeft;
         this.colorBar.offsetTop = this.$refs.colorBar.offsetTop;
       });

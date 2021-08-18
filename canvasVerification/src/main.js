@@ -11,6 +11,7 @@ import * as echarts from 'echarts';
 Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
 import "@/assets/style/global.scss";
+import "@/assets/style/commons.scss";
 
 Vue.use(ElementUI).use(VueRouter);
 
