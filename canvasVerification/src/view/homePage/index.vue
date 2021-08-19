@@ -12,12 +12,12 @@
 </template>
 
 <script>
-import { datas } from "@/router/routerData.js";
+import { routerDatas } from "@/router/routerData.js";
 export default {
   name: "home",
   data() {
     return {
-      datas: datas,
+      datas: routerDatas,
     };
   },
   methods: {
@@ -26,7 +26,7 @@ export default {
     },
   },
   mounted() {
-    console.log(datas);
+    console.log(this.datas);
   },
 };
 </script>
