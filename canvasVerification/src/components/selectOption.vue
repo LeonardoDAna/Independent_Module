@@ -1,7 +1,6 @@
 <template>
   <!-- 下拉选择框 -->
   <div class="selectInput">
-    {{ selectedOne }}
     <input
       style="width: 100%"
       size="1"
@@ -22,6 +21,7 @@
       </span>
     </span>
     <div class="optionsList" v-if="isFocus">
+    <!-- <div class="optionsList"> -->
       <div
         class="selectOption"
         v-for="(item, index) in selectOption"
@@ -48,8 +48,8 @@ export default {
   },
   methods: {
     selectOptFn(item) {
+      console.log(item);
       this.selectedOne = item.label;
-      console.log(this.selectedOne);
     },
     inputOnFocus() {
       this.isFocus = true;
@@ -63,8 +63,9 @@ export default {
 
 <style lang="scss" scoped>
 .optionsList {
+  box-shadow: 0 2px 12px 0 #0000022d;
   position: absolute;
-  top: 40px;
+  top: 35px;
   box-sizing: border-box;
   border-radius: 4px;
   border: 1px solid #c8cccf;

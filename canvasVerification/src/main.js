@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import VueCalendarHeatmap from 'vue-calendar-heatmap'
 import App from './App'
 import router from './router/index.js'
 import VueRouter from "vue-router"
@@ -13,7 +14,7 @@ Vue.config.productionTip = false
 import "@/assets/style/global.scss";
 import "@/assets/style/commons.scss";
 
-Vue.use(ElementUI).use(VueRouter);
+Vue.use(ElementUI).use(VueRouter).use(VueCalendarHeatmap);
 
 /* eslint-disable no-new */
 new Vue({
