@@ -58,5 +58,11 @@ export let routerDatas = [{
     path: "/selectOption",
     component: () => import("@/view/select/index.vue"),
     label: "",
+  }, {
+    name: "大转盘",
+    Tag: ["js","canvas"],
+    path: "/turntable",
+    component: () => import("@/view/turntable/index.vue"),
+    label: "",
   }
 ]
