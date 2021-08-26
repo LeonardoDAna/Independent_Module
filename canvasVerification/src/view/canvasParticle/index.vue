@@ -132,7 +132,7 @@ export default {
     const timer = setInterval(() => {
       // 开始循环 //
       requestAnimationFrame(this.render.bind(this)); //帧动画递归
-    }, 10);
+    }, 17);
     // 通过$once来监听定时器，在beforeDestroy钩子可以被清除。
     this.$once("hook:beforeDestroy", () => {
       clearInterval(timer);
