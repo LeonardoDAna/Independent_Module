@@ -14,10 +14,12 @@
 </template>
 
 <script>
+import Vue from "vue";
 export default {
   name: "turntable",
   data() {
     return {
+      radius: 250, // 半径
       rotationAngle: 0,
       rotateFinish: true,
       pointerText: "GO",
@@ -26,42 +28,67 @@ export default {
           probability: 50,
           label: "默认奖项1",
           fontColor: "#000000",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#7C64E0",
         },
         {
           probability: 50,
           label: "默认奖项2",
           fontColor: "#000000",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#ED5792",
         },
         {
           probability: 50,
           label: "默认奖项3",
           fontColor: "#000000",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#AFE65D",
         },
         {
           probability: 50,
           label: "默认奖项4",
           fontColor: "#000000",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#5DE6E6",
         },
         {
           probability: 50,
-          label: "默认奖项4",
+          label: "默认奖项5",
           fontColor: "#000000",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#EE0030",
         },
         {
           probability: 50,
-          label: "默认奖项4",
+          label: "默认奖项6",
           fontColor: "#000000",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#D78A18",
         },
       ],
     };
   },
   methods: {
+    sectorDraw(target, firstAngle, secondAngle, label) {
+      target.save();
+      target.beginPath();
+      target.moveTo(0, 0);
+      target.arc(
+        0,
+        0,
+        this.radius,
+        (firstAngle * Math.PI) / 180,
+        (secondAngle * Math.PI) / 180,
+        false
+      );
+      // target.lineWidth = 0.5;
+      // 绘制边框
+      // target.strokeStyle = "#ffffff";
+      // target.stroke();
+      // target.fillStyle = "#fff";
+      // target.font = "25px sans-serif";
+      // target.translate(100, 100);
+      // ctx.fillStyle = "#000000";
+      // target.textAlign = "center";
+      // target.fillText(label, 0, 100);
+      target.closePath();
+      target.restore();
+    },
     getRandomValue() {
       let chosedPrize = parseInt(Math.random() * this.awardsList.length);
       return 5 * 360 + (360 / this.awardsList.length) * chosedPrize;
@@ -70,7 +97,7 @@ export default {
       this.rotationAngle += this.getRandomValue();
       this.$refs.canvasTable.style.transform = `rotate(${this.rotationAngle}deg)`;
     },
-    draw() {
+    tableDraw() {
       let ctx = this.$refs.canvasTable.getContext("2d");
       for (let i = 0; i < this.awardsList.length; i++) {
         // 保存当前状态
@@ -81,43 +108,32 @@ export default {
         ctx.translate(250, 250);
         // 从(0, 0)坐标开始定义一条新的子路径
         ctx.moveTo(0, 0);
-        // 旋转弧度,需将角度转换为弧度,使用 degrees * Math.PI/180 公式进行计算。
-        ctx.rotate(
-          (((360 / this.awardsList.length) * i +
-            360 / this.awardsList.length / 2) *
-            Math.PI) /
-            180
-        );
-
         // 绘制圆弧
-        ctx.arc(0, 0, 250, 0, (2 * Math.PI) / this.awardsList.length, false);
-        if (i % 2 == 0) {
-          ctx.fillStyle = "#b0e0e6";
-        } else {
-          ctx.fillStyle = "#e4c6d0";
-        }
+        // ctx.rotate((((360 / this.awardsList.length) * i + 360 / this.awardsList.length / 2) * Math.PI) / 180);
+
+        this.sectorDraw(
+          ctx,
+          i * (360 / this.awardsList.length),
+          (i + 1) * (360 / this.awardsList.length),
+          this.awardsList[i].label
+        );
+        ctx.fillStyle = this.awardsList[i].backgroundColor;
         // 填充扇形
         ctx.fill();
-        // 绘制边框
-        ctx.lineWidth = 0.5;
-        ctx.strokeStyle = "#ffffff";
-        ctx.stroke();
         ctx.fillStyle = "#fff";
         ctx.font = "25px sans-serif";
-        ctx.translate(150,80);
-        // ctx.fillStyle = "#000000";
         ctx.textAlign = "center";
-        // ctx.rotate(
-        //   (Math.PI / this.awardsList.length) * this.awardsList.length - 1
-        // );
-        ctx.fillText(this.awardsList[i].label, 0, 0);
+        ctx.rotate((((360 / this.awardsList.length) * i + 360 / this.awardsList.length / 2) * Math.PI) / 180);
+        // ctx.translate(140, 0);
+        // ctx.rotate((Math.PI / this.awardsList.length) * (this.awardsList.length - 1));
+        ctx.fillText(this.awardsList[i].label, 140, 0);
         // 恢复前一个状态
         ctx.restore();
       }
     },
   },
   mounted() {
-    this.draw();
+    this.tableDraw();
   },
 };
 </script>
