@@ -27,9 +27,6 @@ export default {
     return {
       datas: routerDatas,
       timeValue: [
-        // { date: "2020-08-02", count: 6 },
-        // { date: "2020-08-03", count: 6 },
-        // { date: "2020-08-04", count: 6 },
         { date: "2020-08-05", count: 6 },
         { date: "2020-08-06", count: 6 },
         { date: "2020-08-07", count: 6 },

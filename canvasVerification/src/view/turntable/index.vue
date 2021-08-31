@@ -10,15 +10,77 @@
       </div>
       <canvas ref="canvasTable" width="500" height="500"></canvas>
     </div>
+    <div class="absolute menu">
+      <el-button @click="configDialogVisible = true">配置项</el-button>
+    </div>
+    <el-dialog
+      title="转盘配置"
+      :visible.sync="configDialogVisible"
+      width="50%"
+      :before-close="handleClose"
+    >
+      <el-button @click="addAward()">添加</el-button>
+      <el-table :data="awardsList" style="width: 100%">
+        <el-table-column label="奖项" width="180">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.label"
+              v-if="chosedRowIndex == scope.$index"
+            ></el-input>
+            <span style="margin-left: 10px" v-else>{{ scope.row.label }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="文字颜色" width="180">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.fontColor"
+              v-if="chosedRowIndex == scope.$index"
+            ></el-input>
+            <span style="margin-left: 10px" v-else>{{
+              scope.row.fontColor
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="背景颜色" width="180">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.backgroundColor"
+              v-if="chosedRowIndex == scope.$index"
+            ></el-input>
+            <span style="margin-left: 10px" v-else>{{
+              scope.row.backgroundColor
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveAwardsList">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import Vue from "vue";
 export default {
   name: "turntable",
   data() {
     return {
+      chosedRowIndex: null,
+      configDialogVisible: false,
       radius: 250, // 半径
       rotationAngle: 0,
       rotateFinish: true,
@@ -64,6 +126,32 @@ export default {
     };
   },
   methods: {
+    addAward() {
+      let obj = {
+        probability: 50,
+        label: "",
+        fontColor: "",
+        backgroundColor: "",
+      };
+      this.awardsList.push(obj);
+    },
+    saveAwardsList() {
+      this.configDialogVisible = false;
+      this.tableDraw();
+    },
+    getRandom(start, end) {
+      return parseInt(Math.random(start, end));
+    },
+    handleEdit(index, row) {
+      console.log(index, row);
+      this.chosedRowIndex = index;
+    },
+    handleDelete(index, row) {
+      this.awardsList.splice(index, 1);
+    },
+    handleClose() {
+      this.configDialogVisible = false;
+    },
     sectorDraw(target, firstAngle, secondAngle, label) {
       target.save();
       target.beginPath();
@@ -76,16 +164,6 @@ export default {
         (secondAngle * Math.PI) / 180,
         false
       );
-      // target.lineWidth = 0.5;
-      // 绘制边框
-      // target.strokeStyle = "#ffffff";
-      // target.stroke();
-      // target.fillStyle = "#fff";
-      // target.font = "25px sans-serif";
-      // target.translate(100, 100);
-      // ctx.fillStyle = "#000000";
-      // target.textAlign = "center";
-      // target.fillText(label, 0, 100);
       target.closePath();
       target.restore();
     },
@@ -123,7 +201,12 @@ export default {
         ctx.fillStyle = "#fff";
         ctx.font = "25px sans-serif";
         ctx.textAlign = "center";
-        ctx.rotate((((360 / this.awardsList.length) * i + 360 / this.awardsList.length / 2) * Math.PI) / 180);
+        ctx.rotate(
+          (((360 / this.awardsList.length) * i +
+            360 / this.awardsList.length / 2) *
+            Math.PI) /
+            180
+        );
         // ctx.translate(140, 0);
         // ctx.rotate((Math.PI / this.awardsList.length) * (this.awardsList.length - 1));
         ctx.fillText(this.awardsList[i].label, 140, 0);
@@ -139,7 +222,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.menu {
+  padding: 20px;
+  top: 0;
+  left: 0;
+}
 .main {
+  position: relative;
   width: 100vw;
   height: 100vh;
 }
@@ -148,6 +237,7 @@ export default {
     width: 500px;
     height: 500px;
     transition: all 6s ease-out;
+    transform: rotate(-90deg);
   }
   position: relative;
   height: 500px;
