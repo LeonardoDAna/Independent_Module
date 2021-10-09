@@ -60,9 +60,15 @@ export let routerDatas = [{
     label: "",
   }, {
     name: "大转盘",
-    Tag: ["js","canvas"],
+    Tag: ["js", "canvas"],
     path: "/turntable",
     component: () => import("@/view/turntable/index.vue"),
+    label: "",
+  }, {
+    name: "波浪线条",
+    Tag: ["js", "css"],
+    path: "/waveLine",
+    component: () => import("@/view/waveLine/index.vue"),
     label: "",
   }
 ]
