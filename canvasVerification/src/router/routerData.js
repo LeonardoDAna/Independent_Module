@@ -70,5 +70,17 @@ export let routerDatas = [{
     path: "/waveLine",
     component: () => import("@/view/waveLine/index.vue"),
     label: "",
+  }, {
+    name: "多屏展示",
+    Tag: ["js", "css"],
+    path: "/fullScreen",
+    component: () => import("@/view/fullScreen/index.vue"),
+    label: "",
+  }, {
+    name: "动态渲染模块",
+    Tag: ["js", "css"],
+    path: "/DynamicRenderingModule",
+    component: () => import("@/view/DynamicRenderingModule/index.vue"),
+    label: "",
   }
 ]
