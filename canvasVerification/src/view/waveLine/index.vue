@@ -1,12 +1,18 @@
 <template>
-  <!--Hey! This is the original version of Simple CSS Waves-->
   <!-- 
+  waveLine
   source : https://codepen.io/leowangHy/pen/eYEOEbv 
   anthor : Daniel Österman
   date   : 2019 
+  -->  
+  <!-- 
+  Background Gradient
+  source : https://codepen.io/quasimondo/pen/lDdrF 
+  anthor : Mario Klingemann
+  date   : none 
   -->
 
-  <div class="header">
+  <div class="header" ref="headerDom">
     <div class="inner-header flex">
       <svg
         version="1.1"
@@ -84,25 +90,73 @@ c-22.4,3-38.4,9.2-47.8,18.3c-11.2,10.9-13.6,26.7-16.3,45c-3.1,20.8-6.6,44.4-25.3
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      colors: [
+        [62, 35, 255],
+        [60, 255, 60],
+        [255, 35, 98],
+        [45, 175, 230],
+        [255, 0, 255],
+        [255, 128, 0],
+      ],
+      step: 0,
+      colorIndices: [0, 1, 2, 3],
+      gradientSpeed: 0.002,
+    };
+  },
+  mounted() {
+    setInterval(() => {
+      this.updateGradient();
+    }, 50);
+  },
+  methods: {
+    updateGradient() {
+      var c0_0 = this.colors[this.colorIndices[0]];
+      var c0_1 = this.colors[this.colorIndices[1]];
+      var c1_0 = this.colors[this.colorIndices[2]];
+      var c1_1 = this.colors[this.colorIndices[3]];
+
+      var istep = 1 - this.step;
+      var r1 = Math.round(istep * c0_0[0] + this.step * c0_1[0]);
+      var g1 = Math.round(istep * c0_0[1] + this.step * c0_1[1]);
+      var b1 = Math.round(istep * c0_0[2] + this.step * c0_1[2]);
+      var color1 = "rgb(" + r1 + "," + g1 + "," + b1 + ")";
+
+      var r2 = Math.round(istep * c1_0[0] + this.step * c1_1[0]);
+      var g2 = Math.round(istep * c1_0[1] + this.step * c1_1[1]);
+      var b2 = Math.round(istep * c1_0[2] + this.step * c1_1[2]);
+      var color2 = "rgb(" + r2 + "," + g2 + "," + b2 + ")";
+
+      this.$nextTick(() => {
+        this.$refs.headerDom.style.background = `-webkit-gradient(linear, left top, right top, from(${color1}),to(${color2}))`;
+        this.$refs.headerDom.style.background = `-moz-linear-gradient(left, "${color1}" 0%, "${color2}" 100%`;
+      });
+
+      this.step += this.gradientSpeed;
+      if (this.step >= 1) {
+        this.step %= 1;
+        this.colorIndices[0] = this.colorIndices[1];
+        this.colorIndices[2] = this.colorIndices[3];
+
+        //pick two new target color indices
+        //do not pick the same as the current one
+        this.colorIndices[1] =
+          (this.colorIndices[1] +
+            Math.floor(1 + Math.random() * (this.colors.length - 1))) %
+          this.colors.length;
+        this.colorIndices[3] =
+          (this.colorIndices[3] +
+            Math.floor(1 + Math.random() * (this.colors.length - 1))) %
+          this.colors.length;
+      }
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.waveLine {
-  position: relative;
-  height: 100vh;
-  background: linear-gradient(
-    60deg,
-    rgba(84, 58, 183, 1) 0%,
-    rgba(0, 172, 193, 1) 100%
-  );
-}
-/* @import url(//fonts.googleapis.com/css?family=Lato:300:400); */
-
-body {
-  margin: 0;
-}
-
 h1 {
   font-family: "Lato", sans-serif;
   font-weight: 300;

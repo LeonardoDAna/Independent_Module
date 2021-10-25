@@ -70,5 +70,11 @@ export let routerDatas = [{
     path: "/waveLine",
     component: () => import("@/view/waveLine/index.vue"),
     label: "",
+  }, {
+    name: "bimface",
+    Tag: ["js", "css"],
+    path: "/bimface",
+    component: () => import("@/view/bimface/index.vue"),
+    label: "",
   }
 ]
