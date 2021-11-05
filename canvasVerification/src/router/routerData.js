@@ -83,11 +83,19 @@ export let routerDatas = [{
     path: "/fullScreen",
     component: () => import("@/view/fullScreen/index.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "动态渲染模块",
     Tag: ["js", "css"],
     path: "/DynamicRenderingModule",
     component: () => import("@/view/DynamicRenderingModule/index.vue"),
+    label: "",
+  },
+  {
+    name: "拖拽盒子",
+    Tag: ["js", "css"],
+    path: "/dragBox",
+    component: () => import("@/view/dragBox/index.vue"),
     label: "",
   }
 ]
