@@ -97,5 +97,11 @@ export let routerDatas = [{
     path: "/dragBox",
     component: () => import("@/view/dragBox/index.vue"),
     label: "",
+  }, {
+    name: "使用canvas画标签",
+    Tag: ["js", "css", "canvas"],
+    path: "/canvasDrawDom",
+    component: () => import("@/view/canvasDrawDom/index.vue"),
+    label: "",
   }
 ]

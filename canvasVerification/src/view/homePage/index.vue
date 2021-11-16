@@ -6,14 +6,16 @@
         <calendar-heatmap end-date="2021-07-08" :values="timeValue" />
       </div>
     </header>
-    <div class="row justify-around">
+    <div class="row justify-around wrap">
       <div
-        class="modelBox"
+        class="outsideBox"
         v-for="(item, index) in datas"
         :key="index"
         @click="goLink(item.path)"
       >
-        {{ item.name }}
+        <div class="modelBox">
+          {{ item.name }}
+        </div>
       </div>
     </div>
   </div>
@@ -46,9 +48,7 @@ export default {
       this.$router.push(link);
     },
   },
-  created(){
-    
-  },
+  created() {},
   mounted() {
     console.log(this.datas);
   },
@@ -66,10 +66,14 @@ export default {
   justify-content: space-around;
   align-items: center; */
 }
+.outsideBox {
+  width: 10%;
+}
 .modelBox {
   cursor: pointer;
   width: 100px;
   height: 100px;
+  margin-bottom: 50px;
   border-radius: 10px;
   text-align: center;
   color: #fff;
