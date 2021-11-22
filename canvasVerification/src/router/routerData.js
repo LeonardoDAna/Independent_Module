@@ -103,5 +103,11 @@ export let routerDatas = [{
     path: "/canvasDrawDom",
     component: () => import("@/view/canvasDrawDom/index.vue"),
     label: "",
+  }, {
+    name: "获取每个节点的最大深度",
+    Tag: ["js"],
+    path: "/arrayDepth",
+    component: () => import("@/view/arrayDepth/index.vue"),
+    label: "",
   }
 ]

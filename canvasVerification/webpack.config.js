@@ -17,6 +17,8 @@ module.exports = {
     path: path.resolve(__dirname, 'build'), // 路径必须是一个绝对路径
   },
   plugins: [ // 放着所有的 webpack 插件
+    "@babel/plugin-proposal-optional-chaining", //可选链
+    "@babel/plugin-proposal-nullish-coalescing-operator", //双问号
     new Htmlwebpackplugin({
       template: './src/index.html',
       filename: 'index.html',

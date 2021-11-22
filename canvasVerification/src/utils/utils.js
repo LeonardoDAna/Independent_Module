@@ -12,3 +12,8 @@ export function throttle(fn, delay) {
     }, delay)
   }
 }
+export function matchMax(arr) {
+  let len = arr.length;
+  var newArr = arr.sort();
+  return newArr[len - 1];
+}
