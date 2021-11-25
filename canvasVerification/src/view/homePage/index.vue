@@ -55,7 +55,7 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style lang="scss" scoped>
 .heatMap {
   width: 60%;
   margin: 0 auto;

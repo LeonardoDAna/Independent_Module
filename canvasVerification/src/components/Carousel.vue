@@ -190,7 +190,7 @@ export default {
   },
 };
 </script>
-<style lang="css">
+<style lang="scss">
 #app {
   margin: 0 auto;
 }

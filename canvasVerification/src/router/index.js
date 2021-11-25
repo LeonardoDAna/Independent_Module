@@ -4,7 +4,7 @@ import {
   routerDatas
 } from "./routerData.js";
 import Carousel from '@/components/Carousel.vue'
-import dateTools from '@/components/dateTools.vue'
+import dateTools from '@/components/DateTools.vue'
 import home from '@/view/homePage/index.vue'
 import overflowAuto from '@/view/overflowAuto.vue'
 import magnifyingGlass from '@/view/magnifyingGlass/index.vue'

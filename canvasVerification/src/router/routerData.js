@@ -9,7 +9,7 @@ export let routerDatas = [{
     name: "日历组件",
     Tag: ["js"],
     path: "/dateTools",
-    component: () => import("@/components/dateTools.vue"),
+    component: () => import("@/components/DateTools.vue"),
     label: "",
   }, {
     name: "触底刷新",
