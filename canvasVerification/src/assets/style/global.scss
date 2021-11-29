@@ -31,6 +31,10 @@ $sSizes: (0: 0 / $defSize + rem,
 
 @each $key,
 $val in $sSizes {
+  .fs-#{$key} {
+    font-size: $val;
+  }
+
   .my-ma-#{$key} {
     margin: $val;
   }

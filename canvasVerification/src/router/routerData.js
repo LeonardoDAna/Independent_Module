@@ -105,9 +105,15 @@ export let routerDatas = [{
     label: "",
   }, {
     name: "获取每个节点的最大深度",
-    Tag: ["js"],
+    Tag: ["js", "递归"],
     path: "/arrayDepth",
     component: () => import("@/view/arrayDepth/index.vue"),
+    label: "",
+  }, {
+    name: "伪类和伪元素",
+    Tag: ["js"],
+    path: "/Pseudo-elements&class",
+    component: () => import("@/view/Pseudo-elements&class/index.vue"),
     label: "",
   }
 ]
