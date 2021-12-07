@@ -21,12 +21,13 @@ export default {
       let allBox = this.$refs.allBox
       allBox.addEventListener("mouseenter", this.onmoveStart);
       allBox.addEventListener("mousemove", this.onmove);
-      allBox.addEventListener("mouseleave", this.onmoveEnd);
+      allBox.addEventListener("mouseleave", this.onmoveEnd);  
     },
     onmoveStart(e) {
       let rangeBox = document.createElement("div");
       let allBox = document.querySelector(".allBox");
-      rangeBox.setAttribute("class", "rangeBox");
+      // rangeBox.setAttribute("class", "rangeBox");
+      rangeBox.className = "rangeBox"
       allBox.appendChild(rangeBox);
     },
 
@@ -93,9 +94,11 @@ export default {
 .rangeBox {
   /* border: 1px solid #006dfb; */
   pointer-events: none;
+  border: 1px solid red;
   background-color: rgba(44, 26, 26, 0.342);
   /* width: calc(400/3); */
   /* height: calc(400/3); */
+  z-index: 100;
   width: 133px;
   height: 133px;
   position: absolute;
