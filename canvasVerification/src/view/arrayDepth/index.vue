@@ -57,10 +57,7 @@
             新增
           </span>
           <el-divider direction="vertical"></el-divider>
-          <span
-            class="opeartionBtn fc-deleteColor"
-            @click="() => remove(node, data)"
-          >
+          <span class="opeartionBtn fc-deleteColor" @click="() => remove(node, data)">
             删除
           </span>
         </span>
@@ -72,15 +69,9 @@
       width="30%"
       :before-close="handleClose"
     >
-      <el-form
-        ref="editForm"
-        :model="editForm"
-        :rules="editFormRules"
-        label-width="80px"
-      >
+      <el-form ref="editForm" :model="editForm" :rules="editFormRules" label-width="80px">
         <el-form-item label="菜单名称" prop="menuName">
-          <el-input v-model="editForm.menuName" placeholder="请输入菜单名称">
-          </el-input>
+          <el-input v-model="editForm.menuName" placeholder="请输入菜单名称"> </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -92,7 +83,7 @@
 </template>
 
 <script>
-import { matchMax } from "@/utils/utils.js";
+import { matchMax } from "@/utils/commons.js";
 export default {
   name: "floor",
   data() {
@@ -105,9 +96,7 @@ export default {
         menuName: "",
       },
       editFormRules: {
-        menuName: [
-          { required: true, message: "请输入菜单名称", trigger: "blur" },
-        ],
+        menuName: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
       },
       menuData: [
         {
@@ -261,15 +250,13 @@ export default {
       // 2.如果选中节点没有子节点，且被插入节点也没有子节点 则返回true
       // 3.选中节点深度超过2且选中节点有子节点 &&  被插入节点深度超过2且有子节点 返回false
       let targetNodeHasChild =
-        draggingNode.children == undefined &&
-        draggingNode.children?.length;
+        draggingNode.children == undefined && draggingNode.children?.length;
       let insertedNodeHasChild =
         dropNode.children == undefined && dropNode.children?.length;
       if (
         (targetNodeHasChild && insertedNodeHasChild) ||
         this.singleNodeDepth(dropNode.parent) >= 2 ||
-        this.singleNodeDepth(dropNode.data) +
-          this.singleNodeDepth(draggingNode.data) >=
+        this.singleNodeDepth(dropNode.data) + this.singleNodeDepth(draggingNode.data) >=
           3 ||
         this.singleNodeDepth(draggingNode.data) >= 2 ||
         this.singleNodeDepth(draggingNode.parent) >= 2
@@ -384,7 +371,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped >
+<style lang="scss" scoped>
 .custom-tree-node {
   flex: 1;
   display: flex;

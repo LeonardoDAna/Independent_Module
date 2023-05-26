@@ -1,16 +1,16 @@
 export function throttle(fn, delay) {
-  let timer
+  let timer;
   return function () {
     if (timer) {
-      return
+      return;
     }
     let _this = this,
-      argu = arguments
+      argu = arguments;
     timer = setTimeout(function () {
-      fn.apply(_this, argu)
-      timer = null
-    }, delay)
-  }
+      fn.apply(_this, argu);
+      timer = null;
+    }, delay);
+  };
 }
 export function matchMax(arr) {
   let len = arr.length;

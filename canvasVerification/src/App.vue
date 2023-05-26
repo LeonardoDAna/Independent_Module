@@ -8,20 +8,14 @@
 export default {
   name: "App",
   components: {},
-  computed: {
-    loading() {
-      return this.$store.getters.isLoading;
-    },
-  },
+  computed: {},
   data() {
-    return {
-      // loading: this.$store.getters.isLoading,
-    };
+    return {};
   },
 };
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 body {
   margin: 0;
   padding: 0;

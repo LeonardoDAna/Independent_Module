@@ -1,17 +1,28 @@
-export let routerDatas = [{
+export let routerData = [
+  {
+    name: "主页面",
+    Tag: ["canvas", "js"],
+    path: "/homePage",
+    icon: "homePage",
+    component: () => import("@/view/homePage/index.vue"),
+    label: "",
+  },
+  {
     name: "验证码模块",
-    Tag: ['canvas', "js"],
+    Tag: ["canvas", "js"],
     path: "/Carousel",
     icon: "homePage",
     component: () => import("@/components/Carousel.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "日历组件",
     Tag: ["js"],
     path: "/dateTools",
     component: () => import("@/components/DateTools.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "触底刷新",
     Tag: ["js", "elementUI"],
     path: "/overflowAuto",
@@ -52,19 +63,22 @@ export let routerDatas = [{
     path: "/colorPicker",
     component: () => import("@/view/colorPicker/index.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "下拉选择框",
     Tag: ["js"],
     path: "/selectOption",
     component: () => import("@/view/select/index.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "大转盘",
     Tag: ["js", "canvas"],
     path: "/turntable",
     component: () => import("@/view/turntable/index.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "波浪线条",
     Tag: ["js", "css"],
     path: "/waveLine",
@@ -77,7 +91,8 @@ export let routerDatas = [{
     path: "/bimface",
     component: () => import("@/view/bimface/index.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "多屏展示",
     Tag: ["js", "css"],
     path: "/fullScreen",
@@ -97,23 +112,26 @@ export let routerDatas = [{
     path: "/dragBox",
     component: () => import("@/view/dragBox/index.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "使用canvas画标签",
     Tag: ["js", "css", "canvas"],
     path: "/canvasDrawDom",
     component: () => import("@/view/canvasDrawDom/index.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "获取每个节点的最大深度",
     Tag: ["js", "递归"],
     path: "/arrayDepth",
     component: () => import("@/view/arrayDepth/index.vue"),
     label: "",
-  }, {
+  },
+  {
     name: "伪类和伪元素",
     Tag: ["js"],
     path: "/Pseudo-elements&class",
     component: () => import("@/view/Pseudo-elements&class/index.vue"),
     label: "",
-  }
-]
+  },
+];

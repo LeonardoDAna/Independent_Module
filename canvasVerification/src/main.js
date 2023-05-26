@@ -1,24 +1,38 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import VueCalendarHeatmap from 'vue-calendar-heatmap'
-import App from './App'
-import router from './router/index.js'
-import VueRouter from "vue-router"
-import store from './store'
-// import * as echarts from 'echarts';
-// Vue.prototype.$echarts = echarts
-Vue.config.productionTip = false
+import { createApp } from 'vue'
+// import { rewriteToFixed } from "@/utils/common";
+// import { createPinia } from 'pinia'
+import pinia from "@/stores/index"
+import router from './router/index'
+import App from './App.vue'
+import Antd from "ant-design-vue";
+// import svgIcon from "@/icons/index.vue"
+// import { defineNuxtPlugin } from "@/utils/antDesignVueCom"
+import * as Icons from "@ant-design/icons-vue";
+import zhCN from 'ant-design-vue/es/locale/zh_CN';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+dayjs.locale('zh-cn');
+
+// 全局icon配置
+// import 'virtual:svg-icons-register'
+
+// import moment from "moment";
+// import 'swiper/css';
+
+//引入全部的样式 
+// import 'swiper/swiper-bundle.css'
 import "@/assets/style/global.scss";
 import "@/assets/style/commons.scss";
 
-Vue.use(ElementUI).use(VueRouter).use(VueCalendarHeatmap);
 
-/* eslint-disable no-new */
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount("#app")
+// const pinia = createPinia()
+const app = createApp(App)
+// rewriteToFixed()
+app
+    .use(pinia)
+    .use(router)
+    .use(Antd)
+app.mount('#app')
+// app.component('svg-icon', svgIcon)
+// defineNuxtPlugin(app)
+// import '@/utils/bim3DModelCommon.js'
