@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import { routerDatas } from "@/router/routerData.js";
+import { routerData } from "@/router/routerData.js";
 export default {
   name: "home",
   data() {
     return {
-      datas: routerDatas,
+      datas: routerData,
       timeValue: [
         { date: "2020-08-05", count: 6 },
         { date: "2020-08-06", count: 6 },

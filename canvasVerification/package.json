@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
+    "@kangc/v-md-editor": "^2.3.15",
     "@types/crypto-js": "^4.1.1",
     "@types/echarts": "^4.9.16",
     "@types/js-cookie": "^3.0.3",
@@ -22,6 +23,8 @@
     "echarts": "4.9.0",
     "file-saver": "^2.0.5",
     "highcharts": "^10.3.3",
+    "highlight": "^0.2.4",
+    "highlightjs": "^9.16.2",
     "js-cookie": "^3.0.1",
     "moment": "^2.29.4",
     "nprogress": "^0.2.0",

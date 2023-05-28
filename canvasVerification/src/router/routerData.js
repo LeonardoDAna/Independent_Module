@@ -8,6 +8,14 @@ export let routerData = [
     label: "",
   },
   {
+    name: "博客",
+    Tag: ["markdown", "js", "highlightjs"],
+    path: "/blog",
+    icon: "blog",
+    component: () => import("@/view/blog/index.vue"),
+    label: "",
+  },
+  {
     name: "验证码模块",
     Tag: ["canvas", "js"],
     path: "/Carousel",

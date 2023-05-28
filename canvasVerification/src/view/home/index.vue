@@ -24,7 +24,7 @@
           <p class="fs-40 my-ml-10">LeonardeDAna's Blog</p>
         </div>
         <div class="operation">
-          <span>日志</span>
+          <span @click="goBlog">日志</span>
           <span>技术文档</span>
           <span>摘要</span>
         </div>
@@ -129,6 +129,9 @@ export default {
     },
     goHomePage() {
       this.$router.push("/homePage");
+    },
+    goBlog() {
+      this.$router.push("/blog");
     },
   },
 };

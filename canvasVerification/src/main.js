@@ -11,6 +11,19 @@ import * as Icons from "@ant-design/icons-vue";
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
+
+import VueMarkdownEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
+import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+
+import Prism from 'prismjs';
+
+VueMarkdownEditor.use(vuepressTheme, {
+  Prism,
+});
+
+
 dayjs.locale('zh-cn');
 
 // 全局icon配置
@@ -32,6 +45,7 @@ app
     .use(pinia)
     .use(router)
     .use(Antd)
+    .use(VueMarkdownEditor)
 app.mount('#app')
 // app.component('svg-icon', svgIcon)
 // defineNuxtPlugin(app)
