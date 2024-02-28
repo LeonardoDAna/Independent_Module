@@ -7,15 +7,15 @@
 </template>
 
 <script>
-import redOne from "./components/redBlock";
-import blueBlock from "./components/blueBlock";
-import yellowOne from "./components/yellowBlock";
+import redBlock from "./components/redBlock/index.vue";
+import blueBlock from "./components/blueBlock/index.vue";
+import yellowBlock from "./components/yellowBlock/index.vue";
 
 export default {
   components: {
-    redOne: () => import("./components/redBlock"),
-    blueBlock: () => import("./components/blueBlock"),
-    yellowOne: () => import("./components/yellowBlock"),
+    redOne: redBlock,
+    blueBlock: blueBlock,
+    yellowOne: yellowBlock,
   },
   mounted() {
     this.moduleName = "redOne";
@@ -24,10 +24,10 @@ export default {
     return {
       moduleNameList: [
         {
-          name: "blueBlock",
+          name: "redOne",
         },
         {
-          name: "redOne",
+          name: "blueBlock",
         },
         {
           name: "yellowOne",

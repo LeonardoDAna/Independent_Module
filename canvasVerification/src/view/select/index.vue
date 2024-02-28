@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import selectOption from "@/components/selectOption";
+import selectOption from "@/components/selectOption.vue";
 export default {
   components: {
     selectOption,

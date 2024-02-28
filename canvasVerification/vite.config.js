@@ -13,5 +13,7 @@ export default defineConfig({
       // 如果报错__dirname找不到，需要安装node,执行npm install @types/node --save-dev
       "@": path.resolve(__dirname, "./src"),
     },
+    // 忽略后缀名的配置选项, 添加 .vue 选项时要记得原本默认忽略的选项也要手动写入
+    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
   },
 });
