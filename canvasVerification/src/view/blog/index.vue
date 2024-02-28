@@ -1,14 +1,11 @@
 <template>
   <div class="blog">
     <!-- 左侧边栏 -->
+    <div class="userInfo"></div>
     <!-- 博客主体 -->
     <div class="editorBlock">
       <!-- <v-md-editor ref="preview" v-model="setupData.text" height="400px"></v-md-editor> -->
-      <v-md-editor
-        v-model="text"
-        ref="preview"
-        mode="preview"
-      ></v-md-editor>
+      <v-md-editor v-model="text" ref="preview" mode="preview"></v-md-editor>
     </div>
 
     <!-- 导航栏 -->
@@ -60,10 +57,24 @@ const getAnchors = () => {
 </script>
 <style lang="scss" scoped>
 .editorBlock {
-  width: 50%;
+  padding: 0 20px;
+  width: 35%;
 }
 .blog {
   display: flex;
+  align-items: start;
   justify-content: center;
+}
+.nav {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  width: 150px;
+  border: 1px solid #222;
+  padding: 20px;
+}
+.userInfo {
+  width: 150px;
+  border: 1px solid #222;
 }
 </style>

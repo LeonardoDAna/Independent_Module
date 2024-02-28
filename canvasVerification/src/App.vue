@@ -20,4 +20,7 @@ body {
   margin: 0;
   padding: 0;
 }
+#app {
+  background-color: #f2f3f5;
+}
 </style>
