@@ -10,8 +10,18 @@
 
     <!-- 导航栏 -->
     <div class="nav">
+      <div class="catalog-title">
+        <div class="title">目录</div>
+        <div class="direction" @click="expandFn">
+          {{ setupData.expand ? "收起" : "展开" }}
+          <down-outlined v-if="!setupData.expand" />
+          <up-outlined v-if="setupData.expand" />
+        </div>
+      </div>
+      <a-divider />
       <div
         v-for="anchor in setupData.titles"
+        :key="anchor.title"
         :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
         @click="handleAnchorClick(anchor)"
       >
@@ -24,9 +34,11 @@
 <script setup>
 import { reactive, ref, onMounted, nextTick } from "vue";
 import { text } from "@/assets/md/test.js";
+import Icon, { DownOutlined, UpOutlined } from "@ant-design/icons-vue";
 
 const setupData = reactive({
   text: "",
+  expand: true,
 });
 
 const preview = ref(null);
@@ -54,6 +66,30 @@ const getAnchors = () => {
     indent: hTags.indexOf(el.tagName),
   }));
 };
+
+const expandFn = () => {
+  setupData.expand = !setupData.expand;
+};
+
+const handleAnchorClick = (anchor) => {
+  const { lineIndex } = anchor;
+  console.log(anchor, preview.value);
+
+  const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`);
+
+  if (heading) {
+    // preview.value.scrollToTarget({
+    //   target: heading,
+    //   scrollContainer: window,
+    //   top: 60,
+    // });
+    preview.value.previewScrollToTarget({
+      target: heading,
+      scrollContainer: window,
+      top: 60,
+    });
+  }
+};
 </script>
 <style lang="scss" scoped>
 .editorBlock {
@@ -69,12 +105,25 @@ const getAnchors = () => {
   position: sticky;
   position: -webkit-sticky;
   top: 0;
-  width: 150px;
-  border: 1px solid #222;
+  width: 200px;
+  // border: 1px solid #222;
   padding: 20px;
+  background-color: #ffffff;
+  border-radius: 2px;
 }
 .userInfo {
   width: 150px;
   border: 1px solid #222;
+}
+.catalog-title {
+  display: flex;
+  justify-content: space-between;
+  .direction {
+    color: #8a919f;
+    cursor: pointer;
+  }
+}
+.ant-divider-horizontal {
+  margin: 20px 0;
 }
 </style>
