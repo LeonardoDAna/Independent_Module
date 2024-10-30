@@ -49,9 +49,24 @@
           />
         </defs>
         <g class="parallax">
-          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
-          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
-          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use
+            xlink:href="#gentle-wave"
+            x="48"
+            y="0"
+            fill="rgba(255,255,255,0.7"
+          />
+          <use
+            xlink:href="#gentle-wave"
+            x="48"
+            y="3"
+            fill="rgba(255,255,255,0.5)"
+          />
+          <use
+            xlink:href="#gentle-wave"
+            x="48"
+            y="5"
+            fill="rgba(255,255,255,0.3)"
+          />
           <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
         </g>
       </svg>
@@ -83,9 +98,10 @@ export default {
       this.updateGradient();
     }, 50);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.timer);
   },
+
   methods: {
     updateGradient() {
       var c0_0 = this.colors[this.colorIndices[0]];
@@ -210,7 +226,11 @@ h1 {
 .header {
   position: relative;
   //   text-align: center;
-  background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
+  background: linear-gradient(
+    60deg,
+    rgba(84, 58, 183, 1) 0%,
+    rgba(0, 172, 193, 1) 100%
+  );
   color: white;
 }
 .logo {

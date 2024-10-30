@@ -77,12 +77,18 @@ export default {
       step: 0,
       colorIndices: [0, 1, 2, 3],
       gradientSpeed: 0.002,
+      timer: null,
     };
   },
   mounted() {
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.updateGradient();
     }, 50);
+  },
+  beforeUnmount() {
+    console.log("beforeUnmount");
+
+    clearInterval(this.timer);
   },
   methods: {
     updateGradient() {

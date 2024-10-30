@@ -1,5 +1,4 @@
-export let routerData = [
-  {
+export let routerData = [{
     name: "主页面",
     Tag: ["canvas", "js"],
     path: "/homePage",
@@ -140,6 +139,13 @@ export let routerData = [
     Tag: ["js"],
     path: "/Pseudo-elements&class",
     component: () => import("@/view/Pseudo-elements&class/index.vue"),
+    label: "",
+  },
+  {
+    name: "批量加水印",
+    Tag: ["js", 'canvas'],
+    path: "/watermark",
+    component: () => import("@/view/waterMark/index.vue"),
     label: "",
   },
 ];
