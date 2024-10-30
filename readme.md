@@ -1,9 +1,21 @@
-# canvasVerification
 
-验证码弹窗确认
-放大镜效果
-日历组件
-element 上拉到底更新
+
+node v14.16.1
+
+## Project Setup
+
+```sh
+npm install
 ```
-// 主要技术 canvas
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
 ```
