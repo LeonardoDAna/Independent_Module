@@ -6,7 +6,7 @@
         <calendar-heatmap end-date="2021-07-08" :values="timeValue" />
       </div>
     </header>
-    <div class="row justify-around wrap">
+    <div class="">
       <div
         class="outsideBox"
         v-for="(item, index) in datas"
@@ -14,7 +14,16 @@
         @click="goLink(item.path)"
       >
         <div class="modelBox">
-          {{ item.name }}
+          <div>
+            {{ item.name }}
+          </div>
+          <div class="Tags">
+            <template v-for="tagItem in item.tags" :key="tagItem">
+              <tag>
+                {{ tagItem }}
+              </tag>
+            </template>
+          </div>
         </div>
       </div>
     </div>
@@ -23,8 +32,12 @@
 
 <script>
 import { routerData } from "@/router/routerData.js";
+import tag from "@/components/tag/index";
 export default {
   name: "home",
+  components: {
+    tag,
+  },
   data() {
     return {
       datas: routerData,
@@ -67,25 +80,19 @@ export default {
   align-items: center; */
 }
 .outsideBox {
-  width: 10%;
+  // width: 10%;
 }
 .modelBox {
   cursor: pointer;
-  width: 100px;
-  height: 100px;
-  margin-bottom: 50px;
-  border-radius: 10px;
-  text-align: center;
+  margin: 10px 10px;
   color: #fff;
-  transition: 0.3s;
-  display: flex;
+  transition: 0.5s;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
+  padding: 8px 20px;
   box-sizing: border-box;
-  background-color: cadetblue;
+  background-color: rgb(69, 85, 116);
 }
 .modelBox:hover {
-  transform: scale(1.2, 1.2);
+  transform: scale(1.02);
 }
 </style>

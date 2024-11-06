@@ -150,6 +150,7 @@ p {
 }
 
 .header {
+  height: 100%;
   position: relative;
   text-align: center;
   background: linear-gradient(

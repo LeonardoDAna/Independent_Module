@@ -30,9 +30,6 @@
         </div>
       </div>
     </div>
-    <!-- <div>123123</div> -->
-    <!-- 日志 技术文档 demo -->
-    <!--Waves Container-->
     <div>
       <svg
         class="waves"
@@ -232,6 +229,7 @@ h1 {
     rgba(0, 172, 193, 1) 100%
   );
   color: white;
+  height: 100%;
 }
 .logo {
   width: 50px;
@@ -252,7 +250,7 @@ h1 {
     width: 50px;
     border-radius: 50%;
   }
-  height: 65vh;
+  height: 85vh;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -315,8 +313,8 @@ h1 {
 /*Shrinking for mobile*/
 @media (max-width: 768px) {
   .waves {
-    height: 40px;
-    min-height: 40px;
+    height: 15vh;
+    min-height: 15vh;
   }
   .content {
     height: 30vh;

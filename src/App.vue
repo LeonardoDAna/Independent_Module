@@ -1,7 +1,5 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <router-view />
 </template>
 
 <script>
@@ -22,5 +20,6 @@ body {
 }
 #app {
   background-color: #f2f3f5;
+  height: 100vh;
 }
 </style>

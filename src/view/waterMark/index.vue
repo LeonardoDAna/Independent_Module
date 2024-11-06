@@ -49,8 +49,7 @@ const loadImageFromBase64 = (blobimage) => {
       const image = new Image();
       image.src = reader.result;
       image.onload = () => resolve(image);
-      image.onerror = () =>
-        reject(new Error("Failed to load image from Base64"));
+      image.onerror = () => reject(new Error("Failed to load image from Base64"));
     };
     reader.onerror = (error) => reject(error);
   });
@@ -125,9 +124,7 @@ const addWaterMark = () => {
   var textHeight = metrics.emHeightAscent + metrics.emHeightDescent;
   let block_width = textWidth + config.gap * 2;
   let block_height =
-    textHeight >= config.waterMark_height
-      ? textHeight
-      : config.waterMark_height;
+    textHeight >= config.waterMark_height ? textHeight : config.waterMark_height;
 
   let compute_column = canvas.width % block_width;
   let compute_line = canvas.height % block_height;
@@ -245,10 +242,7 @@ const handleColorPickerChange = (e) => {
             </a-col>
             <a-col :span="12">
               <a-form-item label="字号">
-                <a-input-number
-                  v-model:value="waterMarkConfig.fontSize"
-                  :min="1"
-                >
+                <a-input-number v-model:value="waterMarkConfig.fontSize" :min="1">
                   <template #suffix>
                     <span>px</span>
                   </template>
@@ -266,10 +260,7 @@ const handleColorPickerChange = (e) => {
             </a-col>
             <a-col :span="12">
               <a-form-item label="水印宽度">
-                <a-input-number
-                  :min="1"
-                  v-model:value="waterMarkConfig.waterMark_width"
-                >
+                <a-input-number :min="1" v-model:value="waterMarkConfig.waterMark_width">
                   <template #suffix>
                     <span>px</span>
                   </template>
@@ -278,10 +269,7 @@ const handleColorPickerChange = (e) => {
             </a-col>
             <a-col :span="12">
               <a-form-item label="水印高度">
-                <a-input-number
-                  :min="1"
-                  v-model:value="waterMarkConfig.waterMark_height"
-                >
+                <a-input-number :min="1" v-model:value="waterMarkConfig.waterMark_height">
                   <template #suffix>
                     <span>px</span>
                   </template>
@@ -293,9 +281,7 @@ const handleColorPickerChange = (e) => {
       </div>
       <div class="right_container">
         <div class="operation_btn addBtn" @click="addWaterMark">添加水印</div>
-        <div class="operation_btn downloadBtn" @click="downloadImages">
-          下载图片
-        </div>
+        <div class="operation_btn downloadBtn" @click="downloadImages">下载图片</div>
         <div class="operation_btn resetBtn">重置</div>
       </div>
     </div>
@@ -304,11 +290,13 @@ const handleColorPickerChange = (e) => {
 </template>
 
 <style scoped>
+
 .waterMark {
   width: 1000px;
   margin: 0 auto;
   padding: 2rem;
   background-color: #ffff;
+  height: 100%;
 }
 .operation_container {
   display: flex;
