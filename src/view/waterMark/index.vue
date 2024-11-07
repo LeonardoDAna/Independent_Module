@@ -1,12 +1,14 @@
 <script setup>
 import dayjs from "dayjs";
-import { nextTick, reactive, ref } from "vue";
+import { nextTick, reactive, ref, onMounted, watch } from "vue";
+import { useAppStore } from "@/stores/modules/app";
 import preview from "./components/preview.vue";
 import elColorPicker from "el-color-picker";
 
 const fileInput = ref();
 const canvasRef = ref();
 const testCanvasRef = ref();
+const appStore = useAppStore();
 
 const waterMarkConfig = reactive({
   color: "rgba(129, 129, 129, 0.68)",
@@ -16,6 +18,8 @@ const waterMarkConfig = reactive({
   gap: 30,
   waterMark_width: 82,
   waterMark_height: 82,
+  previewCanvas_width: 300,
+  previewCanvas_height: 300,
 });
 
 const labelCol = reactive({ style: { width: "100px" } });
@@ -32,6 +36,21 @@ let typeIndex = ref(0);
 
 const setupData = reactive({
   photoList: [],
+});
+
+watch(
+  () => appStore.getIsMobile,
+  () => {}
+);
+
+onMounted(() => {
+  // 获取页面大小
+  const waterMark = document.getElementsByClassName("waterMark")[0];
+  console.log([waterMark]);
+  waterMarkConfig.previewCanvas_width = waterMark.offsetWidth - 40;
+
+  const canvas = canvasRef.value;
+  canvas.width = waterMarkConfig.previewCanvas_width;
 });
 
 const upload = async () => {
@@ -210,7 +229,7 @@ const handleColorPickerChange = (e) => {
     <div class="operation_container">
       <div class="left_container">
         <!-- <canvas ref="testCanvasRef" class="test_canvas_container"></canvas> -->
-        <preview :config="waterMarkConfig" />
+        <preview :width="waterMarkConfig.previewCanvas_width" :config="waterMarkConfig" />
       </div>
       <div class="middle_container">
         <a-form
@@ -289,33 +308,70 @@ const handleColorPickerChange = (e) => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@media (max-width: 600px) {
+  // 手机端
+  .waterMark {
+    width: 100%;
+  }
+  .operation_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left_container {
+    // width: 100%;
+  }
+  .right_container {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr); /* 6 列 */
+    grid-template-rows: repeat(2, 1fr); /* 2 行 */
+    gap: 10px; /* 网格间距 */
+  }
+}
+
+@media (min-width: 601px) {
+  // pc端
+  .waterMark {
+    width: 1000px;
+  }
+  .operation_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 200px;
+  }
+  .left_container {
+    width: 200px;
+    background-color: #ccccccff;
+  }
+  .right_container {
+    /* width: 50%; */
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: space-between;
+  }
+}
 
 .waterMark {
-  width: 1000px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
   background-color: #ffff;
   height: 100%;
 }
 .operation_container {
   display: flex;
-  height: 200px;
+  // height: 200px;
 }
 .left_container {
-  width: 200px;
   background-color: #ccccccff;
 }
 .middle_container {
   padding: 0 10px;
-}
-.right_container {
-  /* width: 50%; */
-  padding: 0 10px;
-  display: flex;
-  flex-direction: column;
-  /* align-items: center; */
-  justify-content: space-between;
 }
 .addBtn {
   background-color: #005ba5ff;

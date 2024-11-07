@@ -1,14 +1,9 @@
 <template>
   <!-- <div></div> -->
-  <canvas
-    ref="canvasTestRef"
-    width="200"
-    height="200"
-    class="preview_container"
-  ></canvas>
+  <canvas ref="canvasTestRef" width="200" height="200" class="preview_container"></canvas>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { ref, watch, nextTick } from "vue";
 const canvasTestRef = ref(null);
 
@@ -62,9 +57,7 @@ let addWaterMark = () => {
   var textHeight = metrics.emHeightAscent + metrics.emHeightDescent;
   let block_width = textWidth + config.gap * 2;
   let block_height =
-    textHeight >= config.waterMark_height
-      ? textHeight
-      : config.waterMark_height;
+    textHeight >= config.waterMark_height ? textHeight : config.waterMark_height;
 
   let compute_column = canvas.width % block_width;
   let compute_line = canvas.height % block_height;
@@ -114,12 +107,22 @@ watch(
   },
   { deep: true, immediate: true }
 );
+
+watch(
+  () => props.width,
+  async (val) => {
+    canvasTestRef.value.width = val;
+    canvasTestRef.value.height = val;
+    await nextTick();
+    clearRect();
+    addWaterMark();
+  }
+);
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .preview_container {
   /* width: 500px;
     height: 200px; */
 }
 </style>
-  
