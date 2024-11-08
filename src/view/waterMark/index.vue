@@ -1,6 +1,6 @@
 <script setup>
 import dayjs from "dayjs";
-import { nextTick, reactive, ref, onMounted, watch } from "vue";
+import { nextTick, reactive, ref, onMounted, watch, computed } from "vue";
 import { useAppStore } from "@/stores/modules/app";
 import preview from "./components/preview.vue";
 import elColorPicker from "el-color-picker";
@@ -38,20 +38,33 @@ const setupData = reactive({
   photoList: [],
 });
 
+const isMobile = computed(() => {
+  return appStore.getIsMobile;
+});
+
 watch(
-  () => appStore.getIsMobile,
-  () => {}
+  () => isMobile.value,
+  (val) => {
+    if (val) {
+      setCanvasSize();
+    } else {
+    }
+  },
+  {
+    immediate: true,
+  }
 );
 
-onMounted(() => {
+onMounted(() => {});
+
+const setCanvasSize = () => {
   // 获取页面大小
   const waterMark = document.getElementsByClassName("waterMark")[0];
-  console.log([waterMark]);
   waterMarkConfig.previewCanvas_width = waterMark.offsetWidth - 40;
 
   const canvas = canvasRef.value;
   canvas.width = waterMarkConfig.previewCanvas_width;
-});
+};
 
 const upload = async () => {
   fileInput.value.click();
@@ -342,6 +355,7 @@ const handleColorPickerChange = (e) => {
     flex-direction: column;
     align-items: center;
     height: 200px;
+    flex-wrap: wrap;
   }
   .left_container {
     width: 200px;

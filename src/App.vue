@@ -22,6 +22,7 @@ const checkIfMobile = () => {
   // 简单的手机端判断
   let isMobile = /android|iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
   appStore.setIsMoblie(isMobile);
+  console.log("isMobile", isMobile);
 };
 </script>
 
