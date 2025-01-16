@@ -23,6 +23,9 @@ import hljs from "highlight.js";
 
 VMdPreview.use(githubTheme, {
   Hljs: hljs,
+  codeHighlightExtensionMap: {
+    vue: 'xml',
+  },
 });
 
 dayjs.locale("zh-cn");
