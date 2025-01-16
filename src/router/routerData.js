@@ -1,4 +1,7 @@
-export let routerData = [{
+import layout from "@/layout/index.vue";
+
+export let routerData = [
+  {
     name: "主页面",
     tags: ["canvas", "js"],
     path: "/homePage",
@@ -11,7 +14,14 @@ export let routerData = [{
     tags: ["markdown", "js", "highlightjs"],
     path: "/blog",
     icon: "blog",
-    component: () => import("@/view/blog/index.vue"),
+    redirect: "/blog",
+    component: layout,
+    children: [
+      {
+        path: "",
+        component: () => import("@/view/blog/index.vue"),
+      },
+    ],
     label: "",
   },
   {
@@ -143,7 +153,7 @@ export let routerData = [{
   },
   {
     name: "批量加水印",
-    tags: ["js", 'canvas'],
+    tags: ["js", "canvas"],
     path: "/watermark",
     component: () => import("@/view/waterMark/index.vue"),
     label: "",

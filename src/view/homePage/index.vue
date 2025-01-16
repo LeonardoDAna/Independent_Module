@@ -74,17 +74,19 @@ export default {
   margin: 0 auto;
 }
 .all {
-  height: 100vh;
+  // height: 100vh;
   /* display: flex;
   justify-content: space-around;
   align-items: center; */
+  padding: 20px;
+  background-color: #000000;
 }
 .outsideBox {
   // width: 10%;
 }
 .modelBox {
   cursor: pointer;
-  margin: 10px 10px;
+  margin: 5px;
   color: #fff;
   transition: 0.5s;
   align-items: center;

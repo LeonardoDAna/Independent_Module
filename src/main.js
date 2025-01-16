@@ -1,34 +1,31 @@
-import { createApp } from 'vue'
+import { createApp } from "vue";
 // import { rewriteToFixed } from "@/utils/common";
 // import { createPinia } from 'pinia'
-import pinia from "@/stores/index"
-import router from './router/index'
-import App from './App.vue'
+import pinia from "@/stores/index";
+import router from "./router/index";
+import App from "./App.vue";
 import Antd from "ant-design-vue";
 // import svgIcon from "@/icons/index.vue"
 // import { defineNuxtPlugin } from "@/utils/antDesignVueCom"
 import * as Icons from "@ant-design/icons-vue";
-import zhCN from 'ant-design-vue/es/locale/zh_CN';
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
+import zhCN from "ant-design-vue/es/locale/zh_CN";
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
 
+import "ant-design-vue/dist/antd.css";
 
+import VMdPreview from "@kangc/v-md-editor/lib/preview";
+import githubTheme from "@kangc/v-md-editor/lib/theme/github.js";
+import "@kangc/v-md-editor/lib/theme/style/github.css";
+import "@kangc/v-md-editor/lib/style/preview.css";
+// highlightjs
+import hljs from "highlight.js";
 
-import VueMarkdownEditor from '@kangc/v-md-editor';
-import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
-
-import 'ant-design-vue/dist/antd.css';
-import '@kangc/v-md-editor/lib/style/base-editor.css';
-import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
-
-import Prism from 'prismjs';
-
-VueMarkdownEditor.use(vuepressTheme, {
-  Prism,
+VMdPreview.use(githubTheme, {
+  Hljs: hljs,
 });
 
-
-dayjs.locale('zh-cn');
+dayjs.locale("zh-cn");
 
 // 全局icon配置
 // import 'virtual:svg-icons-register'
@@ -36,21 +33,16 @@ dayjs.locale('zh-cn');
 // import moment from "moment";
 // import 'swiper/css';
 
-//引入全部的样式 
+//引入全部的样式
 // import 'swiper/swiper-bundle.css'
 import "@/assets/style/global.scss";
 import "@/assets/style/commons.scss";
 
-
 // const pinia = createPinia()
-const app = createApp(App)
+const app = createApp(App);
 // rewriteToFixed()
-app
-    .use(pinia)
-    .use(router)
-    .use(Antd)
-    .use(VueMarkdownEditor)
-app.mount('#app')
+app.use(pinia).use(router).use(Antd).use(VMdPreview);
+app.mount("#app");
 // app.component('svg-icon', svgIcon)
 // defineNuxtPlugin(app)
 // import '@/utils/bim3DModelCommon.js'

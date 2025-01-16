@@ -93,7 +93,6 @@ const loadImageFromBase64 = (blobimage) => {
 const getFiles = async (e) => {
   await nextTick();
   const files = e.target.files;
-
   const requestList = Array.from(files).map((file) => {
     console.log(file);
     return loadImageFromBase64(file).then((image) => ({
@@ -106,10 +105,9 @@ const getFiles = async (e) => {
 
   try {
     const images = await Promise.all(requestList);
-    console.log(images);
     setupData.photoList = images;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
