@@ -1,5 +1,4 @@
 <template>
-  <!-- <div></div> -->
   <canvas ref="canvasTestRef" width="200" height="200" class="preview_container"></canvas>
 </template>
 
@@ -20,6 +19,17 @@ const props = defineProps({
       waterMark_height: 100,
     }),
   },
+  width: {
+    type: Number,
+    default: 200,
+  },
+});
+
+watch(props.width, async (val) => {
+  await nextTick();
+  const canvas = canvasTestRef.value;
+  canvas.width = val;
+  canvas.height = val;
 });
 
 let clearRect = () => {

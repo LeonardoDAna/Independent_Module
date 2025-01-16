@@ -4,6 +4,7 @@ import { nextTick, reactive, ref, onMounted, watch, computed } from "vue";
 import { useAppStore } from "@/stores/modules/app";
 import preview from "./components/preview.vue";
 import elColorPicker from "el-color-picker";
+import { message } from "ant-design-vue";
 
 const fileInput = ref();
 const canvasRef = ref();
@@ -18,8 +19,8 @@ const waterMarkConfig = reactive({
   gap: 30,
   waterMark_width: 82,
   waterMark_height: 82,
-  previewCanvas_width: 300,
-  previewCanvas_height: 300,
+  previewCanvas_width: 200,
+  previewCanvas_height: 200,
 });
 
 const labelCol = reactive({ style: { width: "100px" } });
@@ -39,32 +40,34 @@ const setupData = reactive({
 });
 
 const isMobile = computed(() => {
-  return appStore.getIsMobile;
+  return appStore.getIsMoblie;
 });
-
-watch(
-  () => isMobile.value,
-  (val) => {
-    if (val) {
-      setCanvasSize();
-    } else {
-    }
-  },
-  {
-    immediate: true,
-  }
-);
 
 onMounted(() => {});
 
 const setCanvasSize = () => {
+  console.log("setCanvasSize");
   // 获取页面大小
   const waterMark = document.getElementsByClassName("waterMark")[0];
   waterMarkConfig.previewCanvas_width = waterMark.offsetWidth - 40;
-
-  const canvas = canvasRef.value;
-  canvas.width = waterMarkConfig.previewCanvas_width;
+  console.log(waterMarkConfig.previewCanvas_width);
 };
+
+watch(
+  isMobile,
+  async (val) => {
+    await nextTick();
+    if (val) {
+      setCanvasSize();
+    } else {
+      waterMarkConfig.previewCanvas_width = 200;
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 
 const upload = async () => {
   fileInput.value.click();
@@ -89,22 +92,25 @@ const loadImageFromBase64 = (blobimage) => {
 
 const getFiles = async (e) => {
   await nextTick();
-  let requestList = [];
-  for (let index = 0; index < e.target.files.length; index++) {
-    const file = e.target.files[index];
-    requestList.push(loadImageFromBase64(file));
+  const files = e.target.files;
+
+  const requestList = Array.from(files).map((file) => {
+    console.log(file);
+    return loadImageFromBase64(file).then((image) => ({
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      image, // 假设 loadImageFromBase64 返回的是图像数据
+    }));
+  });
+
+  try {
+    const images = await Promise.all(requestList);
+    console.log(images);
+    setupData.photoList = images;
+  } catch (error) {
+    console.log(error);
   }
-
-  Promise.all(requestList)
-    .then((images) => {
-      console.log(images);
-
-      setupData.photoList = images;
-      console.log(images);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
 };
 
 const getImgInfo = (index, imgUrl) => {
@@ -116,9 +122,21 @@ const getImgInfo = (index, imgUrl) => {
     setupData.photoList[index].width = img.width;
   };
 };
+
 const addWaterMark = () => {
-  let img = setupData.photoList[0];
-  let proportion = img.width / img.height;
+  if (setupData.photoList.length === 0) {
+    message.warn("请上传图片！");
+    return;
+  }
+
+  for (let i = 0; i < setupData.photoList.length; i++) {
+    let element = setupData.photoList[i];
+    let img = element.image;
+    waterMarkInit(img, i);
+  }
+};
+
+const waterMarkInit = (img, index) => {
   let scale = 0.4;
 
   let config = {
@@ -129,8 +147,8 @@ const addWaterMark = () => {
     waterMark_width: waterMarkConfig.waterMark_width,
     waterMark_height: waterMarkConfig.waterMark_height,
   };
-
-  const canvas = canvasRef.value;
+  // const canvas = canvasRef.value;
+  const canvas = document.getElementsByClassName(`canvasRef_${index}`)[0];
   const ctx = canvas.getContext("2d");
 
   canvas.width = img.width * scale;
@@ -196,14 +214,20 @@ const addWaterMark = () => {
   }
 };
 
-const downloadImages = () => {
-  let canvas = canvasRef.value;
-  const base64Img = canvas.toDataURL("image/png");
-  var a = document.createElement("a"); // 生成一个a元素
-  var event = new MouseEvent("click"); // 创建一个单击事件
-  a.download = dayjs().valueOf("YYYY-MM-DD HH:mm:ss"); // 设置图片名称
-  a.href = base64Img; // 将生成的URL设置为a.href属性
-  a.dispatchEvent(event);
+const downloadImages = (images) => {
+  images.forEach((img, index) => {
+    let canvas = document.getElementsByClassName(`canvasRef_${index}`)[0];
+    const base64Img = canvas.toDataURL("image/png");
+    var a = document.createElement("a"); // 生成一个a元素
+    var event = new MouseEvent("click"); // 创建一个单击事件
+    a.download = dayjs().valueOf("YYYY-MM-DD HH:mm:ss"); // 设置图片名称
+    a.href = base64Img; // 将生成的URL设置为a.href属性
+    a.dispatchEvent(event);
+  });
+};
+
+const handleDownload = () => {
+  downloadImages(setupData.photoList);
 };
 
 const handleColorPickerChange = (e) => {
@@ -229,7 +253,7 @@ const handleColorPickerChange = (e) => {
       <div class="imgList">
         <template v-for="(item, index) in setupData.photoList" :key="index">
           <div class="imgItem">
-            <img :src="item.currentSrc" alt="" />
+            <img :src="item.image.currentSrc" alt="" />
             <div class="imgItem-info">
               <div>{{ item.name }}</div>
               <div>{{ item.size }}</div>
@@ -313,11 +337,19 @@ const handleColorPickerChange = (e) => {
       </div>
       <div class="right_container">
         <div class="operation_btn addBtn" @click="addWaterMark">添加水印</div>
-        <div class="operation_btn downloadBtn" @click="downloadImages">下载图片</div>
-        <div class="operation_btn resetBtn">重置</div>
+        <div class="operation_btn downloadBtn" @click="handleDownload">下载图片</div>
+        <!-- <div class="operation_btn resetBtn">重置</div> -->
       </div>
     </div>
-    <canvas ref="canvasRef" width="500px" class="canvas_container"></canvas>
+    <div class="waterMarkList">
+      <template v-for="(item, index) in setupData.photoList" :key="index">
+        <canvas
+          :ref="`canvasRef_${index}`"
+          :class="`canvasRef_${index}`"
+          class="canvas_container"
+        ></canvas>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -335,6 +367,7 @@ const handleColorPickerChange = (e) => {
 
   .left_container {
     // width: 100%;
+    background-color: #ccccccff;
   }
   .right_container {
     display: grid;
@@ -342,6 +375,15 @@ const handleColorPickerChange = (e) => {
     grid-template-columns: repeat(2, 1fr); /* 6 列 */
     grid-template-rows: repeat(2, 1fr); /* 2 行 */
     gap: 10px; /* 网格间距 */
+  }
+  .waterMarkList {
+    display: flex;
+    align-items: flex-start;
+    overflow-x: auto;
+    .canvas_container {
+      padding-top: 10px;
+      padding-right: 10px;
+    }
   }
 }
 
@@ -352,22 +394,42 @@ const handleColorPickerChange = (e) => {
   }
   .operation_container {
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     align-items: center;
     height: 200px;
     flex-wrap: wrap;
   }
   .left_container {
     width: 200px;
+    height: 200px;
     background-color: #ccccccff;
+  }
+  .middle_container {
+    width: 100%;
+    height: 200px;
+    flex: 1;
+    padding: 0 10px;
+    .waterMarkConfig {
+      background-color: #0077ff;
+    }
   }
   .right_container {
     /* width: 50%; */
     padding: 0 10px;
     display: flex;
     flex-direction: column;
+    height: 100%;
     /* align-items: center; */
-    justify-content: space-between;
+    // justify-content: space-between;
+  }
+  .waterMarkList {
+    display: flex;
+    align-items: flex-start;
+    overflow-x: auto;
+    .canvas_container {
+      padding-top: 10px;
+      padding-right: 10px;
+    }
   }
 }
 
@@ -381,19 +443,14 @@ const handleColorPickerChange = (e) => {
   display: flex;
   // height: 200px;
 }
-.left_container {
-  background-color: #ccccccff;
-}
-.middle_container {
-  padding: 0 10px;
-}
+
 .addBtn {
-  background-color: #005ba5ff;
+  background-color: #5b97c8;
   /* margin-bottom: 20px; */
 }
 .downloadBtn {
   /* margin-bottom: 20px; */
-  background-color: #00a54aff;
+  background-color: #37c376;
 }
 .operation_btn {
   width: 180px;
@@ -404,6 +461,7 @@ const handleColorPickerChange = (e) => {
   user-select: none;
   color: #ffff;
   text-align: center;
+  margin-bottom: 10px;
 }
 .uploadFilesBtn {
   border: 2px dashed #0077ff;

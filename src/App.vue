@@ -33,6 +33,6 @@ body {
 }
 #app {
   background-color: #f2f3f5;
-  height: 100vh;
+  min-height: 100vh;
 }
 </style>
