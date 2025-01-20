@@ -43,7 +43,7 @@ const setupData = reactive({
   expand: true,
 });
 
-const preview = ref(null);
+const preview = ref();
 
 onMounted(async () => {
   await nextTick();
@@ -77,7 +77,7 @@ const handleAnchorClick = (anchor) => {
   const { lineIndex } = anchor;
   console.log(anchor, preview.value);
 
-  const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`);
+  const heading = preview.value.querySelector(`[data-v-md-line="${lineIndex}"]`);
 
   if (heading) {
     // preview.value.scrollToTarget({
