@@ -48,6 +48,7 @@
     "unplugin-vue-components": "^0.24.1",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-html": "^3.2.0",
+    "vite-plugin-md": "^0.21.5",
     "vite-plugin-optimize-persist": "^0.1.2",
     "vite-plugin-package-config": "^0.1.1",
     "vite-plugin-svg-icons": "^2.0.1",

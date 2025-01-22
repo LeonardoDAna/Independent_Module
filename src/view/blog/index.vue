@@ -1,32 +1,32 @@
 <template>
-  <div class="blog">
+  <div class="blog" ref="blog">
     <div class="content">
       <!-- 左侧边栏 -->
       <div class="userInfo"></div>
       <!-- 博客主体 -->
       <div class="editorBlock">
         <!-- <v-md-editor ref="preview" v-model="setupData.text" height="400px"></v-md-editor> -->
-        <v-md-preview ref="preview" :text="text"></v-md-preview>
+        <v-md-preview ref="preview" :text="setupData.text"></v-md-preview>
       </div>
 
       <!-- 导航栏 -->
       <div class="nav">
         <div class="catalog-title">
           <div class="title">目录</div>
-          <div class="direction" @click="expandFn">
-            {{ setupData.expand ? "收起" : "展开" }}
-            <down-outlined v-if="!setupData.expand" />
-            <up-outlined v-if="setupData.expand" />
-          </div>
         </div>
         <a-divider />
-        <div
-          v-for="anchor in setupData.titles"
-          :key="anchor.title"
-          :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
-          @click="handleAnchorClick(anchor)"
-        >
-          <a style="cursor: pointer">{{ anchor.title }}</a>
+
+        <div class="catalog-list">
+          <div class="selectedCatalog"></div>
+          <template v-for="anchor in setupData.titles" :key="anchor.title">
+            <div
+              class="catalogItem"
+              :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
+              @click="handleAnchorClick(anchor)"
+            >
+              <a class="anchorTitle">{{ anchor.title }}</a>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -35,8 +35,12 @@
 
 <script setup>
 import { reactive, ref, onMounted, nextTick } from "vue";
-import text from "@/assets/md/test.md?raw";
+// import text from "@/assets/md/test.md?raw";
 import Icon, { DownOutlined, UpOutlined } from "@ant-design/icons-vue";
+import { useRouter, useRoute } from "vue-router";
+import blogList from "@/assets/md/index";
+const router = useRouter();
+const route = useRoute();
 
 const setupData = reactive({
   text: "",
@@ -44,11 +48,27 @@ const setupData = reactive({
 });
 
 const preview = ref();
+const blog = ref();
 
 onMounted(async () => {
+  setupData.text = await getBlogFile();
+
   await nextTick();
   getAnchors();
 });
+
+const getBlogFile = async () => {
+  return new Promise((resolve, reject) => {
+    try {
+      let content = blogList.find((e) => e.id == route.params.id);
+      fetch(content.path).then((response) => {
+        resolve(response.text());
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
 const getAnchors = () => {
   console.log(preview.value);
@@ -69,31 +89,51 @@ const getAnchors = () => {
   }));
 };
 
-const expandFn = () => {
-  setupData.expand = !setupData.expand;
-};
-
 const handleAnchorClick = (anchor) => {
   const { lineIndex } = anchor;
-  console.log(anchor, preview.value);
+  const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`);
+  const selectedCatalog = document.querySelector(".selectedCatalog");
 
-  const heading = preview.value.querySelector(`[data-v-md-line="${lineIndex}"]`);
-
+  let index = setupData.titles.findIndex((item) => item.lineIndex === lineIndex);
   if (heading) {
-    // preview.value.scrollToTarget({
-    //   target: heading,
-    //   scrollContainer: window,
-    //   top: 60,
-    // });
-    preview.value.previewScrollToTarget({
-      target: heading,
-      scrollContainer: window,
-      top: 60,
+    selectedCatalog.style.top = `${index * 42}px`;
+
+    heading.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest", // 'start', 'center', 'end', or 'nearest'
     });
   }
 };
 </script>
 <style lang="scss" scoped>
+.catalog-list {
+  position: relative;
+}
+.selectedCatalog {
+  position: absolute;
+  height: 42px;
+  transition: all 0.3s;
+  top: 0;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -8px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: -5px solid transparent;
+    border-left: 5px solid rgb(255, 114, 114);
+    transform: translate(-50%, -50%);
+  }
+}
+.anchorTitle {
+  cursor: pointer;
+  color: #141414ff;
+  position: relative;
+}
 .content {
   width: 100%;
   margin-top: 30px;
@@ -111,11 +151,12 @@ const handleAnchorClick = (anchor) => {
   display: flex;
   align-items: start;
   justify-content: center;
+  height: calc(100vh - 60px);
 }
 .nav {
   position: sticky;
   position: -webkit-sticky;
-  top: 0;
+  top: 30px;
   width: 200px;
   // border: 1px solid #222;
   padding: 20px;
@@ -124,10 +165,11 @@ const handleAnchorClick = (anchor) => {
 }
 .userInfo {
   width: 150px;
-  border: 1px solid #222;
+  // border: 1px solid #222;
 }
 .catalog-title {
   display: flex;
+  font-size: 20px;
   justify-content: space-between;
   .direction {
     color: #8a919f;
@@ -135,6 +177,6 @@ const handleAnchorClick = (anchor) => {
   }
 }
 .ant-divider-horizontal {
-  margin: 20px 0;
+  margin: 12px 0;
 }
 </style>

@@ -19,6 +19,10 @@ export let routerData = [
     children: [
       {
         path: "",
+        component: () => import("@/view/blogList/index.vue"),
+      },
+      {
+        path: ":id",
         component: () => import("@/view/blog/index.vue"),
       },
     ],
