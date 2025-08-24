@@ -10,6 +10,8 @@ import Antd from "ant-design-vue";
 import * as Icons from "@ant-design/icons-vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import dayjs from "dayjs";
+import { MdEditor } from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 import "dayjs/locale/zh-cn";
 
 import "ant-design-vue/dist/antd.css";
@@ -44,7 +46,7 @@ import "@/assets/style/commons.scss";
 // const pinia = createPinia()
 const app = createApp(App);
 // rewriteToFixed()
-app.use(pinia).use(router).use(Antd).use(VMdPreview);
+app.use(pinia).use(router).use(MdEditor).use(Antd).use(VMdPreview);
 app.mount("#app");
 // app.component('svg-icon', svgIcon)
 // defineNuxtPlugin(app)

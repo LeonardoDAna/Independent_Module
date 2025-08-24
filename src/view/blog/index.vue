@@ -6,7 +6,9 @@
       <!-- 博客主体 -->
       <div class="editorBlock">
         <!-- <v-md-editor ref="preview" v-model="setupData.text" height="400px"></v-md-editor> -->
-        <v-md-preview ref="preview" :text="setupData.text"></v-md-preview>
+        <!-- <v-md-preview ref="preview" :text="setupData.text"></v-md-preview> -->
+        <MdPreview ref="preview" :modelValue="setupData.text" @onGetCatalog="getCatalo" />
+        <MdCatalog :editorId="id" :scrollElement="scrollElement" />
       </div>
 
       <!-- 导航栏 -->
@@ -49,6 +51,8 @@ const setupData = reactive({
 
 const preview = ref();
 const blog = ref();
+const id = "preview-only";
+const scrollElement = document.documentElement;
 
 onMounted(async () => {
   setupData.text = await getBlogFile();
@@ -70,9 +74,20 @@ const getBlogFile = async () => {
   });
 };
 
+const getCatalo = (titles) => {
+  console.log(titles, "getCatalo");
+  
+  setupData.titles = titles.map((el) => ({
+    title: el.text,
+    indent: el.level,
+  }));
+};
+
 const getAnchors = () => {
   console.log(preview.value);
   const anchors = preview.value.$el.querySelectorAll("h1,h2,h3,h4,h5,h6");
+  console.log(anchors);
+
   let titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
 
   if (!titles.length) {

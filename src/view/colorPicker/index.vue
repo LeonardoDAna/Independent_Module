@@ -1,10 +1,7 @@
 <template>
   <div class="row align-middle flex-direction">
     <div class="colorBox">
-      <div
-        class="firstFloor"
-        :style="{ backgroundColor: colorList[pickerDistance] }"
-      >
+      <div class="firstFloor" :style="{ backgroundColor: colorList[pickerDistance] }">
         <div class="secondFloor"></div>
         <div class="thirdFloor"></div>
       </div>
@@ -51,9 +48,7 @@ export default {
       this.$refs.progressBar.addEventListener("mousemove", (event) =>
         this.mousemove(event)
       );
-      this.$refs.pickerBtn.addEventListener("mouseup", (event) =>
-        this.mouseup(event)
-      );
+      this.$refs.pickerBtn.addEventListener("mouseup", (event) => this.mouseup(event));
     },
     bindColorListMoveFn() {
       this.$refs.colorPickerBtn.addEventListener("mousedown", (event) => {});
@@ -63,12 +58,11 @@ export default {
           0 <= this.pickerDistance &&
           this.pickerDistance < this.$refs.colorBar.clientWidth
         ) {
-          this.$refs.colorPickerBtn.style.left =
-            this.pickerDistance - 10 + "px";
+          this.$refs.colorPickerBtn.style.left = this.pickerDistance - 10 + "px";
           let x =
             (this.pickerDistance / this.$refs.colorBar.clientWidth) *
             this.colorList.length;
-            this.pickerDistance = ~~x
+          this.pickerDistance = ~~x;
         }
       });
       this.$refs.colorPickerBtn.addEventListener("mouseup", (event) => {});
