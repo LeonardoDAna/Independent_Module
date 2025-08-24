@@ -5,10 +5,7 @@
       <div class="userInfo"></div>
       <!-- 博客主体 -->
       <div class="editorBlock">
-        <!-- <v-md-editor ref="preview" v-model="setupData.text" height="400px"></v-md-editor> -->
-        <!-- <v-md-preview ref="preview" :text="setupData.text"></v-md-preview> -->
-        <MdPreview ref="preview" :modelValue="setupData.text" @onGetCatalog="getCatalo" />
-        <MdCatalog :editorId="id" :scrollElement="scrollElement" />
+        <MdPreview ref="preview" :modelValue="setupData.text" @onGetCatalog="getCatalo" :mdHeadingId="mdHeadingId" />
       </div>
 
       <!-- 导航栏 -->
@@ -24,9 +21,8 @@
             <div
               class="catalogItem"
               :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
-              @click="handleAnchorClick(anchor)"
             >
-              <a class="anchorTitle">{{ anchor.title }}</a>
+              <a class="anchorTitle" :href="`#heading-${anchor.line}`">{{ anchor.title }}</a>
             </div>
           </template>
         </div>
@@ -43,6 +39,7 @@ import { useRouter, useRoute } from "vue-router";
 import blogList from "@/assets/md/index";
 const router = useRouter();
 const route = useRoute();
+const mdHeadingId = (_text, _level, index) => `heading-${index}`;
 
 const setupData = reactive({
   text: "",
@@ -76,11 +73,16 @@ const getBlogFile = async () => {
 
 const getCatalo = (titles) => {
   console.log(titles, "getCatalo");
-  
-  setupData.titles = titles.map((el) => ({
-    title: el.text,
-    indent: el.level,
-  }));
+
+  setupData.titles = titles
+    .filter((e) => e.level < 3)
+    .map((el) => {
+      return {
+        title: el.text,
+        indent: el.level - 1,
+        line: el.line,
+      };
+    });
 };
 
 const getAnchors = () => {
@@ -105,13 +107,15 @@ const getAnchors = () => {
 };
 
 const handleAnchorClick = (anchor) => {
-  const { lineIndex } = anchor;
-  const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`);
+  const { line } = anchor;
+  const heading = preview.value.$el.querySelector(`[data-line="${line}"]`);
+  console.log(heading);
+  
   const selectedCatalog = document.querySelector(".selectedCatalog");
 
-  let index = setupData.titles.findIndex((item) => item.lineIndex === lineIndex);
+  let index = setupData.titles.findIndex((item) => item.line === line);
   if (heading) {
-    selectedCatalog.style.top = `${index * 42}px`;
+    selectedCatalog.style.op = `${index * 42}px`;
 
     heading.scrollIntoView({
       behavior: "smooth",

@@ -16,19 +16,6 @@ import "dayjs/locale/zh-cn";
 
 import "ant-design-vue/dist/antd.css";
 
-import VMdPreview from "@kangc/v-md-editor/lib/preview";
-import githubTheme from "@kangc/v-md-editor/lib/theme/github.js";
-import "@kangc/v-md-editor/lib/theme/style/github.css";
-import "@kangc/v-md-editor/lib/style/preview.css";
-// highlightjs
-import hljs from "highlight.js";
-
-VMdPreview.use(githubTheme, {
-  Hljs: hljs,
-  codeHighlightExtensionMap: {
-    vue: 'xml',
-  },
-});
 
 dayjs.locale("zh-cn");
 
@@ -46,7 +33,7 @@ import "@/assets/style/commons.scss";
 // const pinia = createPinia()
 const app = createApp(App);
 // rewriteToFixed()
-app.use(pinia).use(router).use(MdEditor).use(Antd).use(VMdPreview);
+app.use(pinia).use(router).use(MdEditor).use(Antd);
 app.mount("#app");
 // app.component('svg-icon', svgIcon)
 // defineNuxtPlugin(app)
