@@ -7,7 +7,9 @@
             <a href="javascript:void(0)" @click="goBlogContent(item)">{{ item.name }}</a>
           </h2>
           <div class="row justify-between">
-            <p class="meta">标签：{{ item.tags.join("、") }}</p>
+            <p class="meta">
+              标签：{{ item.tags.length > 0 ? item.tags.join("、") : "" }}
+            </p>
             <p class="meta">发布日期：{{ item.updateTime }}</p>
           </div>
         </header>

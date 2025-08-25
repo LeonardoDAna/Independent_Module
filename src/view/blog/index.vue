@@ -1,16 +1,22 @@
 <template>
   <div class="blog" ref="blog">
-    <div class="content">
+    <div class="content" ref="scrollElement">
       <!-- 左侧边栏 -->
       <div class="userInfo"></div>
       <!-- 博客主体 -->
       <div class="editorBlock">
-        <MdPreview ref="preview" :modelValue="setupData.text" @onGetCatalog="getCatalo" :mdHeadingId="mdHeadingId" />
+        <MdPreview
+          :modelValue="setupData.text"
+          @onGetCatalog="getCatalo"
+          :editorId="editorId"
+          :mdHeadingId="mdHeadingId"
+        />
       </div>
 
       <!-- 导航栏 -->
       <div class="nav">
-        <div class="catalog-title">
+        <MdCatalog :editorId="editorId" :scrollElement="scrollElement" :theme="theme" />
+        <!-- <div class="catalog-title">
           <div class="title">目录</div>
         </div>
         <a-divider />
@@ -22,10 +28,12 @@
               class="catalogItem"
               :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
             >
-              <a class="anchorTitle" :href="`#heading-${anchor.line}`">{{ anchor.title }}</a>
+              <a class="anchorTitle" :href="`#heading-${anchor.line}`">{{
+                anchor.title
+              }}</a>
             </div>
           </template>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -46,16 +54,17 @@ const setupData = reactive({
   expand: true,
 });
 
-const preview = ref();
 const blog = ref();
-const id = "preview-only";
-const scrollElement = document.documentElement;
+const editorId = "preview-only";
+const theme = "dark";
+const scrollElement  = ref();
 
 onMounted(async () => {
   setupData.text = await getBlogFile();
-
+  
   await nextTick();
-  getAnchors();
+  // scrollElement.value = document.querySelector(".main_container");
+  // getAnchors();
 });
 
 const getBlogFile = async () => {
@@ -73,6 +82,7 @@ const getBlogFile = async () => {
 
 const getCatalo = (titles) => {
   console.log(titles, "getCatalo");
+  scrollElement.value = document.querySelector(".main_container");
 
   setupData.titles = titles
     .filter((e) => e.level < 3)
@@ -86,7 +96,6 @@ const getCatalo = (titles) => {
 };
 
 const getAnchors = () => {
-  console.log(preview.value);
   const anchors = preview.value.$el.querySelectorAll("h1,h2,h3,h4,h5,h6");
   console.log(anchors);
 
@@ -110,7 +119,7 @@ const handleAnchorClick = (anchor) => {
   const { line } = anchor;
   const heading = preview.value.$el.querySelector(`[data-line="${line}"]`);
   console.log(heading);
-  
+
   const selectedCatalog = document.querySelector(".selectedCatalog");
 
   let index = setupData.titles.findIndex((item) => item.line === line);
@@ -175,12 +184,18 @@ const handleAnchorClick = (anchor) => {
 .nav {
   position: sticky;
   position: -webkit-sticky;
+  max-height: 100vh;
+  overflow: auto;
   top: 30px;
   width: 200px;
   // border: 1px solid #222;
   padding: 20px;
   background-color: #ffffff;
   border-radius: 2px;
+  &::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+  }
 }
 .userInfo {
   width: 150px;
