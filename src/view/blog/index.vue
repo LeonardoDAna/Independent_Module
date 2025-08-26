@@ -1,6 +1,6 @@
 <template>
-  <div class="blog" ref="blog">
-    <div class="content" ref="scrollElement">
+  <div class="blog" ref="scrollElement">
+    <div class="content">
       <!-- 左侧边栏 -->
       <div class="userInfo"></div>
       <!-- 博客主体 -->
@@ -15,25 +15,7 @@
 
       <!-- 导航栏 -->
       <div class="nav">
-        <MdCatalog :editorId="editorId" :scrollElement="scrollElement" :theme="theme" />
-        <!-- <div class="catalog-title">
-          <div class="title">目录</div>
-        </div>
-        <a-divider />
-
-        <div class="catalog-list">
-          <div class="selectedCatalog"></div>
-          <template v-for="anchor in setupData.titles" :key="anchor.title">
-            <div
-              class="catalogItem"
-              :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
-            >
-              <a class="anchorTitle" :href="`#heading-${anchor.line}`">{{
-                anchor.title
-              }}</a>
-            </div>
-          </template>
-        </div> -->
+        <MdCatalog :editorId="editorId" scrollElement=".main_container" :theme="theme" />
       </div>
     </div>
   </div>
@@ -41,7 +23,6 @@
 
 <script setup>
 import { reactive, ref, onMounted, nextTick } from "vue";
-// import text from "@/assets/md/test.md?raw";
 import Icon, { DownOutlined, UpOutlined } from "@ant-design/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import blogList from "@/assets/md/index";
@@ -57,14 +38,11 @@ const setupData = reactive({
 const blog = ref();
 const editorId = "preview-only";
 const theme = "dark";
-const scrollElement  = ref();
+const scrollElement = ref();
 
 onMounted(async () => {
   setupData.text = await getBlogFile();
-  
   await nextTick();
-  // scrollElement.value = document.querySelector(".main_container");
-  // getAnchors();
 });
 
 const getBlogFile = async () => {
@@ -82,7 +60,6 @@ const getBlogFile = async () => {
 
 const getCatalo = (titles) => {
   console.log(titles, "getCatalo");
-  scrollElement.value = document.querySelector(".main_container");
 
   setupData.titles = titles
     .filter((e) => e.level < 3)
@@ -180,6 +157,7 @@ const handleAnchorClick = (anchor) => {
   align-items: start;
   justify-content: center;
   height: calc(100vh - 60px);
+  overflow-y: auto;
 }
 .nav {
   position: sticky;
