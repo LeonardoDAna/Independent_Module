@@ -1,10 +1,10 @@
 <template>
-  <div class="blog" ref="scrollElement">
+  <div class="blog">
     <div class="content">
       <!-- 左侧边栏 -->
       <div class="userInfo"></div>
       <!-- 博客主体 -->
-      <div class="editorBlock">
+      <div class="editorBlock" ref="scrollElement">
         <MdPreview
           :modelValue="setupData.text"
           @onGetCatalog="getCatalo"
@@ -14,15 +14,14 @@
       </div>
 
       <!-- 导航栏 -->
-      <div class="nav">
-        <MdCatalog :editorId="editorId" scrollElement=".main_container" :theme="theme" />
-      </div>
     </div>
   </div>
+  <MdCatalog class="nav" :editorId="editorId" scrollElement="#main_container" />
 </template>
 
 <script setup>
 import { reactive, ref, onMounted, nextTick } from "vue";
+// import text from "@/assets/md/test.md?raw";
 import Icon, { DownOutlined, UpOutlined } from "@ant-design/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import blogList from "@/assets/md/index";
@@ -156,18 +155,41 @@ const handleAnchorClick = (anchor) => {
   display: flex;
   align-items: start;
   justify-content: center;
-  height: calc(100vh - 60px);
-  overflow-y: auto;
 }
 .nav {
-  position: sticky;
+  // position: sticky;
+  // position: -webkit-sticky;
+  // height: 100vh;
+  // overflow: auto;
+  // width: 200px;
+  // // border: 1px solid #222;
+  // padding: 20px;
+  // background-color: #ffffff;
+  // border-radius: 2px;
+  // &::-webkit-scrollbar {
+  //   height: 0;
+  //   width: 0;
+  // }
+  position: absolute;
   position: -webkit-sticky;
   max-height: 100vh;
-  overflow: auto;
   top: 30px;
+  overflow: auto;
   width: 200px;
   // border: 1px solid #222;
-  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  &::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+  }
+}
+.catalog {
+  position: absolute;
+  position: -webkit-sticky;
+  overflow: auto;
+  top: 30px;
+  // border: 1px solid #222;
   background-color: #ffffff;
   border-radius: 2px;
   &::-webkit-scrollbar {
