@@ -9,14 +9,15 @@
           :modelValue="setupData.text"
           @onGetCatalog="getCatalo"
           :editorId="editorId"
-          :mdHeadingId="mdHeadingId"
         />
       </div>
 
       <!-- 导航栏 -->
+      <div class="navBlock">
+        <MdCatalog :editorId="editorId" scrollElement="#main_container" />
+      </div>
     </div>
   </div>
-  <MdCatalog class="nav" :editorId="editorId" scrollElement="#main_container" />
 </template>
 
 <script setup>
@@ -155,30 +156,23 @@ const handleAnchorClick = (anchor) => {
   display: flex;
   align-items: start;
   justify-content: center;
+
+  height: 100%;
+  // overflow-y: auto;
 }
-.nav {
-  // position: sticky;
-  // position: -webkit-sticky;
-  // height: 100vh;
-  // overflow: auto;
-  // width: 200px;
-  // // border: 1px solid #222;
-  // padding: 20px;
-  // background-color: #ffffff;
-  // border-radius: 2px;
-  // &::-webkit-scrollbar {
-  //   height: 0;
-  //   width: 0;
-  // }
-  position: absolute;
+
+.navBlock {
+  position: sticky;
   position: -webkit-sticky;
-  max-height: 100vh;
-  top: 30px;
+  max-height: 100%;
   overflow: auto;
+  top: 30px;
   width: 200px;
   // border: 1px solid #222;
+  padding: 20px;
   background-color: #ffffff;
   border-radius: 2px;
+  height: 100%;
   &::-webkit-scrollbar {
     height: 0;
     width: 0;
