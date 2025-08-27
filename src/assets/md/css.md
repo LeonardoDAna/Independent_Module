@@ -1,25 +1,7 @@
-# CSS `:has()` 选择器详解与实际应用
+# 探索 CSS 的未来
+## CSS 伪类选择器 :is(), :where(), :not() :has() 详解
 
-## 什么是 `:has()` 选择器？
-
-`:has()` 是一个功能性伪类，它允许你选择**包含一个或多个与特定选择器匹配的子元素**的父元素。
-
-**语法：**
-```css
-父元素:has(子元素选择器) {
-  /* 样式规则 */
-}
-```
-
-<iframe height="300" style="width: 100%;" scrolling="no" title=":has()_from" src="https://codepen.io/jsevalyi-the-reactor/embed/WbQzzOe?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-  See the Pen <a href="https://codepen.io/jsevalyi-the-reactor/pen/WbQzzOe">
-  :has()_from</a> by 王Leo (<a href="https://codepen.io/jsevalyi-the-reactor">@jsevalyi-the-reactor</a>)
-  on <a href="https://codepen.io">CodePen</a>.
-</iframe>
-
-# CSS 伪类选择器 :is(), :where(), :not() 详解
-
-本文将详细介绍 CSS 中的三个非常有用的伪类函数选择器：`:is()`、`:where()` 和 `:not()`。它们能帮助我们更灵活、更简洁地编写 CSS 选择器。
+> 本文将详细介绍 CSS 中的三个非常有用的伪类函数选择器：`:is()`、`:where()` 、 `:not()` 和`:has()`。它们能帮助我们更灵活、更简洁地编写 CSS 选择器。
 
 ---
 
@@ -72,7 +54,7 @@ table :is(tr:hover, tr:nth-child(even):hover) {
 ```
 这里 `:is()` 可以包含伪类，使选择器更清晰。
 
-# 2. `:where()` 伪类
+## 2. `:where()` 伪类
 
 ### 概述
 `:where()` 的功能与 `:is()` 完全相同，用于组合多个选择器。最大的区别在于特异性。
@@ -112,7 +94,7 @@ table :is(tr:hover, tr:nth-child(even):hover) {
 }
 ```
 
-# 2. `:not()` 伪类
+## 3. `:not()` 伪类
 
 ### 概述
 `:not()` 函数用于选择不匹配指定选择器的元素。
@@ -160,14 +142,73 @@ li:not(:first-child):not(:last-child) {
   border-bottom: 1px solid #eee;
 }
 ```
-| 选择器 |  功能  |  特异性特点  | 主要用途 |
-| :----- | :------: | -----: | -----: |
-| :is() | 匹配任意一个指定的选择器 | 等于其内部选择器中特异性最高的 | 简化复杂选择器，提高可读性 |
-| :where() | 匹配任意一个指定的选择器 | 始终为 0	 | 定义可轻松被覆盖的默认样式 |
-| :not() | 排除匹配指定选择器的元素 | 等于其参数选择器的特异性 | 反向选择，排除特定元素 |
+| 选择器   |           功能           |                     特异性特点 |                   主要用途 |
+| :------- | :----------------------: | -----------------------------: | -------------------------: |
+| :is()    | 匹配任意一个指定的选择器 | 等于其内部选择器中特异性最高的 | 简化复杂选择器，提高可读性 |
+| :where() | 匹配任意一个指定的选择器 |                       始终为 0 | 定义可轻松被覆盖的默认样式 |
+| :not()   | 排除匹配指定选择器的元素 |       等于其参数选择器的特异性 |     反向选择，排除特定元素 |
+## 4. `:has()` 伪类
 
+### 概述
+`:has()` 是一个功能性伪类，它允许你选择**包含一个或多个与特定选择器匹配的子元素**的父元素。
 
-# CSS 原生嵌套语法与 SCSS/LESS 嵌套的区别
+**语法：**
+```css
+父元素:has(子元素选择器) {
+  /* 样式规则 */
+}
+```
+
+### 例子 1：通过内部 `input` 的状态来改变 `form-group` 样式
+
+<iframe height="300" style="width: 100%;" scrolling="no" title=":has()_from" src="https://codepen.io/jsevalyi-the-reactor/embed/WbQzzOe?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/jsevalyi-the-reactor/pen/WbQzzOe">
+  :has()_from</a> by 王Leo (<a href="https://codepen.io/jsevalyi-the-reactor">@jsevalyi-the-reactor</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+## @container 容器查询
+
+**语法：**
+```css
+@container { selector } { styles }
+```
+
+> 传统的媒体查询是基于视口宽度判断，而容器查询可以根据容器尺寸来应用不同样式，非常适合组件化设计
+
+```css
+@container (min-width: 400px) {
+  .card {
+    background: lightblue;
+  }
+}
+```
+
+```html
+<div class="container">
+  <div class="card">内容</div>
+</div>
+```
+当父元素（.container）宽度 ≥ 400px时，.card元素会改变样式。
+
+##  CSS `aspect-ratio` 属性
+
+允许轻松设置元素宽高比，无需额外技巧。
+
+```css
+img, video, .box {
+  aspect-ratio: 16 / 9;
+}
+```
+### 例子：通过拖拽来改变元素的宽高
+
+<iframe height="300" style="width: 100%;" scrolling="no" title="Untitled" src="https://codepen.io/jsevalyi-the-reactor/embed/WbQKKVW?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/jsevalyi-the-reactor/pen/WbQKKVW">
+  Untitled</a> by 王Leo (<a href="https://codepen.io/jsevalyi-the-reactor">@jsevalyi-the-reactor</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+## CSS 原生嵌套语法与 SCSS/LESS 嵌套的区别
 
 随着 CSS 规范的演进，**原生 CSS 现在支持了嵌套语法**（CSS Nesting），这使得开发者无需依赖预处理器（如 SCSS 或 LESS）也能在 CSS 文件中直接使用嵌套结构。然而，CSS 原生嵌套与 SCSS/LESS 的嵌套在语法、功能和处理方式上存在显著区别。
 
