@@ -1,4 +1,6 @@
-# Claude Code 完整指南
+<img src="../img/markdown/claudeCode_logo.png" alt="Claude Code" />
+
+# Claude Code 简单分享与实际应用
 
 ## 一、Claude Code 的来源与发展历史
 
@@ -88,6 +90,9 @@ $ cd your-project && claude
 └─ Anthropic Console
 ```
  
+
+<img src="../img/markdown/claudeCode_bash.jpg" alt="Claude Code 三种模式" />
+
 ### 2.2 七大核心能力
 
 | 核心能力 | 说明 |
