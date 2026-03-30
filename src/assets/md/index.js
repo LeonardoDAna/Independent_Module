@@ -1,5 +1,6 @@
 import waterMark from './waterMark.md'
 import CSSFuture from './css.md'
+import claudeCode from './claudeCode.md'
 import test from './test.md'
 
 const list = [
@@ -18,6 +19,14 @@ const list = [
         updateTime: '2025-08-24',
         description: '探索CSS未来的方向',
         tags: ['css']
+    },
+	{
+        id: 3,
+        path: claudeCode,
+        name: 'claude code快速上手',
+        updateTime: '2026-03-27',
+        description: 'AI Agent技术分享',
+        tags: ['ai','claude']
     },
     // {
     //     id: 3,
