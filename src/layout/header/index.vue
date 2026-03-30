@@ -11,7 +11,14 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const goBlog = () => {
+  router.push("/blog");
+};
+</script>
 
 <style lang="scss" scoped>
 .header_container {

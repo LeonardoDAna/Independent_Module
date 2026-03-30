@@ -148,7 +148,7 @@ const handleAnchorClick = (anchor) => {
   gap: 10px;
 }
 .editorBlock {
-  padding: 0 20px;
+  padding: 20px;
   width: 50%;
   background-color: #ffffff;
 }
