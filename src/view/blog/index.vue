@@ -150,7 +150,16 @@ const handleAnchorClick = (anchor) => {
 .editorBlock {
   padding: 20px;
   width: 50%;
-  background-color: #ffffff;
+  background-color: #ffffff;  
+  :deep(.md-editor-preview) {
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+  }
 }
 .blog {
   display: flex;

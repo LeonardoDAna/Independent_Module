@@ -1,4 +1,4 @@
-<img src="src/assets/img/markdown/claudeCode_logo.png" alt="Claude Code" />
+<img src="/markdown/claudeCode_logo.png" alt="Claude Code" />
 
 # Claude Code 简单分享与实际应用
 
@@ -91,7 +91,7 @@ $ cd your-project && claude
 ```
  
 
-<img src="src/assets/img/markdown/claudeCode_bash.jpg" alt="Claude Code 三种模式" />
+<img src="/markdown/claudeCode_bash.jpg" alt="Claude Code 三种模式" />
 
 ### 2.2 七大核心能力
 
