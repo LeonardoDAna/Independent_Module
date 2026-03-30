@@ -46,6 +46,48 @@ $ npm install -g @anthropic-ai/claude-code
 $ cd your-project && claude
 ```
 
+### 2.2 登录方式
+
+| 对比维度 | Claude 订阅账号（Pro/Max/Team/Enterprise） | Anthropic Console（API 计费） | 第三方平台（Bedrock/Vertex/Azure） |
+|----------|------------------------------------------|-----------------------------|------------------------------------|
+| **本质定位** | 给「人」用的订阅产品 | 给「程序」用的 API 后台 | 通过云厂商中转调用 Claude |
+| **计费方式** | 固定月费 | 按 token 用量计费 | 按云厂商定价计费 |
+| **适合规模** | 个人 / 小团队 | 中小团队 / 开发者 | 中大型企业 |
+| **技术门槛** | 低，开箱即用 | 中，需要集成 API | 高，需要配置云平台权限 |
+ 
+---
+ 
+#### 详细场景对比
+ 
+| 使用场景 | Claude 订阅账号 | Anthropic Console | 第三方平台 |
+|----------|----------------|-------------------|-----------|
+| **个人日常编码 / 学习** | ✅ 首选，Pro 即可满足 | ⚠️ 按量计费，低频使用不划算 | ❌ 配置复杂，不适合个人 |
+| **高频重度个人使用** | ✅ 选 Max，用量更高 | ✅ 用量大时按量可能更省 | ❌ 不适合 |
+| **小团队协作开发** | ✅ Team 方案，统一账单 | ✅ 多 Key 管理，按项目核算 | ⚠️ 可行但配置成本高 |
+| **开发 AI 产品 / SaaS** | ❌ 订阅不支持程序调用 | ✅ 核心场景，API Key 直接集成 | ✅ 适合，尤其已有云合同时 |
+| **企业内部 AI 工具** | ⚠️ Enterprise 可满足 | ✅ 按用量付费，成本透明 | ✅ 统一云资源管理更方便 |
+| **数据合规 / 地域要求** | ⚠️ 依赖 Anthropic 数据中心 | ⚠️ 数据在 Anthropic 侧 | ✅ 支持指定区域部署，合规更强 |
+| **已有 AWS / GCP 合同** | ❌ 无法复用云折扣 | ❌ 需单独和 Anthropic 结算 | ✅ 统一云账单，复用折扣 |
+| **SSO 单点登录** | ✅ Enterprise 支持 | ⚠️ 需自行实现 | ✅ 云厂商原生支持 |
+| **用量监控 / 成本核算** | ⚠️ 固定月费，难以按项目拆分 | ✅ 多 Key 分项目监控 | ✅ 云平台原生账单系统 |
+| **Claude Code 集成方式** | 浏览器登录账号 | API Key 登录 | 环境变量配置，无需浏览器 |
+ 
+ 
+#### 选型建议
+```
+个人学习 / 日常使用
+└─ Pro 订阅
+ 
+个人高频开发
+└─ Max 订阅
+ 
+5~20 人前端团队协作
+└─ Team 订阅
+ 
+开发 AI 产品 / 需要 API 集成
+└─ Anthropic Console
+```
+ 
 ### 2.2 七大核心能力
 
 | 核心能力 | 说明 |
@@ -71,7 +113,67 @@ $ cd your-project && claude
 **【Claude Code 执行流程】** 读取组件代码 → 分析网络请求 → 检查 bundle size → 识别性能瓶颈 → 实施懒加载/缓存/分包优化 → 输出优化报告
 
 ---
+## Skills
 
+### 什么是 Skills？
+Skills 是将你的专业知识打包成可组合资源的模块，能把通用 AI 助手转变为针对特定领域的专家。本质上就是一个包含 SKILL.md 文件的文件夹，里面放着 Claude 执行特定任务所需的指令、脚本和资源。 Kilo
+Skills 就像「可执行的专业知识」——它们是结构化的、可强制执行的工作流，能引导 Claude 以严谨的方式完成复杂任务，避免 AI 急于写代码而跳过必要的检查步骤。
+
+### Skills 的核心优势
+
+Skills 极大地减少了 token 消耗。每个 skill 在扫描时只占用约 100 个 token（仅读取 name + description），只有在真正触发时才加载完整内容（约 5000 token）。这意味着你可以同时挂载多个 skill，而不会撑爆上下文窗口。
+
+### Skill 文件结构
+每个 skill 的基本结构如下：
+
+```
+	my-skill/
+	├── SKILL.md        # 主文件，包含 frontmatter 配置和指令
+	├── scripts/        # 可选：可执行脚本
+	│   └── helper.py
+	└── resources/      # 可选：模板、配置等支撑文件
+		└── template.json
+```
+SKILL.md 示例：
+```
+---
+name: explain-code
+description: 解释代码结构，使用类比和图示。当用户问"这段代码怎么工作的"时自动触发。
+---
+
+解释代码时，请按以下步骤进行：
+1. 先用生活中的类比描述
+2. 画 ASCII 图展示结构和流程
+3. 逐步讲解代码执行过程
+4. 指出一个常见误区
+```
+
+### Skill 安装
+```bash
+	# 从官方市场安装
+	/plugin marketplace add anthropics/skills
+
+	# 或安装本地目录
+	/plugin add /path/to/skill-directory
+
+	# 放到全局目录（所有项目可用）
+	~/.claude/skills/your-skill/SKILL.md
+
+	# 放到项目目录（仅当前项目可用）
+	.claude/skills/your-skill/SKILL.md
+```
+
+### Skills 推荐
+* `frontend-design` — 高质量 UI 生成
+这个 skill 的核心价值不只是让界面好看，而是让 Claude 生成的代码摆脱「AI 味」视觉风格，达到生产级别的 UI 质量。对于任何需要面向用户的产品，这是首选 skill。用 `/frontend-design` 调用，描述你想构建的内容即可。
+* `docx` / `xlsx` / `pptx` — 文档生成
+这三个是 Anthropic 官方维护的内置 skill，分别用于创建和编辑 Word 文档、Excel 表格和 PPT 演示文稿，支持样式、公式、追踪修改等高级功能。
+* `pdf` — PDF 处理
+完整的 PDF 工具链，支持文本提取、表格解析、创建新 PDF、合并/拆分文档、处理表单等操作。
+* `explain-code` — 代码讲解
+自定义 skill 的经典示例，能让 Claude 用类比 + ASCII 图 + 逐步讲解的方式解释代码，非常适合 Code Review 或团队分享时使用。
+* `Figma` / `Notion` / `Atlassian` Skills
+官方 Skills 目录中有来自 `Figma`、`Notion`、`Atlassian` 等平台的合作 skill，配合对应的 MCP 连接器使用，能实现跨工具的自动化工作流。
 ## 三、Claude Code vs OpenAI Codex 深度对比
 
 ### 3.1 全维度对比矩阵
