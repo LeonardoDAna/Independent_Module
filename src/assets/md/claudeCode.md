@@ -114,6 +114,13 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 ### 2.2 登录方式
 
+clloude-code 给了三种登录方式：
+```
+1. 登录 Anthropic Console
+
+
+```
+
 | 对比维度 | Claude 订阅账号<br/>（Pro/Max/Team/Enterprise） | Anthropic Console<br/>（API 计费） | 第三方平台<br/>（Bedrock/Vertex/Azure） |
 |----------|------------------------------------------|-----------------------------|------------------------------------|
 | **本质定位** | 给「人」用的订阅产品 | 给「程序」用的 API 后台 | 通过云厂商中转调用 Claude |
