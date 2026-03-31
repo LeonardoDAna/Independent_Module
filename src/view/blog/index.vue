@@ -159,6 +159,9 @@ const handleAnchorClick = (anchor) => {
       border-radius: 8px;
       margin: 16px 0;
     }
+    table{
+        width: 100%;
+    }
   }
 }
 .blog {
