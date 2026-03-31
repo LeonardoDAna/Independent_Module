@@ -114,11 +114,16 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 ### 2.2 登录方式
 
-clloude-code 给了三种登录方式：
+claude code 一共有三种登录方式：
 ```
-1. 登录 Anthropic Console
+    # 通过浏览器登录 Claude.ai 账号
+    1. Claude account with subscription · Pro, Max, Team, or Enterprise
 
+    # 通过 API Key 方式登录
+    2. Anthropic Console account · API usage billing
 
+    # 第三方云平台
+    3. 3rd-party platform · Amazon Bedrock, Microsoft Foundry, or Vertex AI
 ```
 
 | 对比维度 | Claude 订阅账号<br/>（Pro/Max/Team/Enterprise） | Anthropic Console<br/>（API 计费） | 第三方平台<br/>（Bedrock/Vertex/Azure） |
@@ -128,25 +133,9 @@ clloude-code 给了三种登录方式：
 | **适合规模** | 个人 / 小团队 | 中小团队 / 开发者 | 中大型企业 |
 | **技术门槛** | 低，开箱即用 | 中，需要集成 API | 高，需要配置云平台权限 |
  
----
+--- 
  
-#### 详细场景对比
- 
-| 使用场景 | Claude 订阅账号 | Anthropic Console | 第三方平台 |
-|----------|----------------|-------------------|-----------|
-| **个人日常编码 / 学习** | ✅ 首选，Pro 即可满足 | ⚠️ 按量计费，低频使用不划算 | ❌ 配置复杂，不适合个人 |
-| **高频重度个人使用** | ✅ 选 Max，用量更高 | ✅ 用量大时按量可能更省 | ❌ 不适合 |
-| **小团队协作开发** | ✅ Team 方案，统一账单 | ✅ 多 Key 管理，按项目核算 | ⚠️ 可行但配置成本高 |
-| **开发 AI 产品 / SaaS** | ❌ 订阅不支持程序调用 | ✅ 核心场景，API Key 直接集成 | ✅ 适合，尤其已有云合同时 |
-| **企业内部 AI 工具** | ⚠️ Enterprise 可满足 | ✅ 按用量付费，成本透明 | ✅ 统一云资源管理更方便 |
-| **数据合规 / 地域要求** | ⚠️ 依赖 Anthropic 数据中心 | ⚠️ 数据在 Anthropic 侧 | ✅ 支持指定区域部署，合规更强 |
-| **已有 AWS / GCP 合同** | ❌ 无法复用云折扣 | ❌ 需单独和 Anthropic 结算 | ✅ 统一云账单，复用折扣 |
-| **SSO 单点登录** | ✅ Enterprise 支持 | ⚠️ 需自行实现 | ✅ 云厂商原生支持 |
-| **用量监控 / 成本核算** | ⚠️ 固定月费，难以按项目拆分 | ✅ 多 Key 分项目监控 | ✅ 云平台原生账单系统 |
-| **Claude Code 集成方式** | 浏览器登录账号 | API Key 登录 | 环境变量配置，无需浏览器 |
- 
- 
-#### 选型建议
+**选型建议**
 ```
 个人学习 / 日常使用
 └─ Pro 订阅
@@ -163,6 +152,8 @@ clloude-code 给了三种登录方式：
  
 
 <img src="/markdown/claudeCode_bash.jpg" alt="Claude Code 三种模式" />
+
+### 2.2 常用命令
 
 ### 2.2 七大核心能力
 
@@ -192,7 +183,7 @@ clloude-code 给了三种登录方式：
 ## 三、 Skills
 
 ### 3.1 什么是 Skills？
-**Skills** 是将你的专业知识打包成可组合资源的模块，能把通用 AI 助手转变为针对特定领域的专家。本质上就是一个包含 SKILL.md 文件的文件夹，里面放着 Claude 执行特定任务所需的指令、脚本和资源。 Kilo
+**Skills** 是将你的专业知识打包成可组合资源的模块，能把通用 AI 助手转变为针对特定领域的专家。本质上就是一个包含 SKILL.md 文件的文件夹，里面放着 Claude 执行特定任务所需的指令、脚本和资源。
 Skills 就像「可执行的专业知识」——它们是结构化的、可强制执行的工作流，能引导 Claude 以严谨的方式完成复杂任务，避免 AI 急于写代码而跳过必要的检查步骤。
 
 ### 3.2 核心优势
