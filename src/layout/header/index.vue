@@ -1,9 +1,9 @@
 <template>
   <div class="header_container">
     <div class="operation">
-      <span @click="goBlog">日志</span>
-      <span>技术文档</span>
-      <span>摘要</span>
+      <span @click="goBlog">技术分享</span>
+      <!-- <span>技术文档</span> -->
+      <!-- <span>摘要</span> -->
     </div>
     <div class="headerImg">
       <img class="logoImg" src="@/assets/img/logo.png" alt="" />
