@@ -1,7 +1,9 @@
 <img src="/markdown/claudeCode_logo.png" alt="Claude Code" />
 
 # Claude Code 分享与实际应用
-
+!!! danger 
+注意：本次分享使用的 **claude code** 版本为 **V2.1.94** 
+!!!
 ## 一、Claude Code 的来源与发展历史
 
 ### 1.1 Anthropic 公司背景
@@ -160,13 +162,13 @@ claude code 一共有三种登录方式：
 
 ### 2.2 常用命令
 
-## 三、 Skills
+## 三、Claude Code 核心能力 - Skills
 
 ### 3.1 什么是 Skills？
 **Skills** 是将你的专业知识打包成可组合资源的模块，能把通用 AI 助手转变为针对特定领域的专家。本质上就是一个包含 SKILL.md 文件的文件夹，里面放着 Claude 执行特定任务所需的指令、脚本和资源。
 Skills 就像「可执行的专业知识」——它们是结构化的、可强制执行的工作流，能引导 Claude 以严谨的方式完成复杂任务，避免 AI 急于写代码而跳过必要的检查步骤。
 
-### 3.2 核心优势
+### 3.2 Skill 核心优势
 
 Skills 极大地减少了 token 消耗。每个 skill 在扫描时只占用约 100 个 token（仅读取 name + description），只有在真正触发时才加载完整内容（约 5000 token）。这意味着你可以同时挂载多个 skill，而不会撑爆上下文窗口。
 
@@ -210,9 +212,66 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
     .claude/skills/your-skill/SKILL.md
 ```
 
-### 3.5 Skills 使用
+### 3.5 Skill 使用（调用 / 调试 / 禁用）
 
-### Skills 推荐
+**先理清机制**：Skill 是写进 `SKILL.md` 的「知识与步骤」，交给模型在对话里执行；它**不是**后台常驻进程，也不会像 ESLint 保存即跑那样在无对话时自动完成审查。因此：**「怎么用」= 如何触发模型按这份 Skill 做事**；**「开发完提醒我」= 用项目规则或 Hooks 做提醒/门禁**，二者常组合使用。
+
+#### 有哪些用法？
+
+| 方式 | 说明 | 适用场景 |
+|------|------|----------|
+| **对话里明说（推荐）** | 直接说：「按 `vue-bug-guard` 检查 `src/xxx.vue`」「用项目里的 Vue 隐患 Skill Review 本次改动」 | 最可控，想查再查 |
+| **依赖 `description` 匹配（半自动）** | SKILL 里 `description` 写清触发条件（如「检查 Vue、Review 组件」），你说到类似话时模型**更可能**加载该 Skill | 减少打字，但仍非 100% 保证每次都会用 |
+| **写在 `CLAUDE.md` / `.claude/rules/*.md`（习惯约束）** | 约定：「完成一个功能或准备提交前，对本次修改涉及的 `.vue` 执行 vue-bug-guard 清单」 | 每次会话加载项目说明时，模型会**倾向**遵守，接近「团队默认流程」 |
+| **Slash / 插件命令（视版本而定）** | 部分环境可用 `/` 列出或调用已挂载 Skill，以你当前 Claude Code 版本为准 | 与官方插件、市场文档一致时最省事 |
+
+**不要指望的**：单独靠 Skill 自己在「你写代码时」无感运行——那需要下面 **Hooks 或外部脚本**。
+
+#### Hooks 能做什么？和 Skill 什么关系？
+
+[Hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) 是在 Claude Code **生命周期**里执行的一段 **Shell / HTTP / Prompt**（配置在 `~/.claude/settings.json` 或项目 `.claude/settings.json`，也可用 `/hooks` 管理）。它是**确定性**的：到点就执行。
+
+- **Hooks 不能替你在后台「调用 Skill」**：Skill 的审查逻辑在模型侧；Hook 可以跑 `eslint`、`vue-tsc`、打印提醒文案等。
+- **想和「开发完提醒」结合**：可用 `SessionEnd`（会话结束）或 `Stop`（每轮回复结束）挂一个轻量命令，**打印固定提醒**，提示你在下一轮对话里执行 vue-bug-guard；若挂在 `Stop` 上，提醒会很频繁，一般更推荐 **`SessionEnd`** 或依赖 **CLAUDE.md**。
+
+**示例：`SessionEnd` 时打印一句提醒（需本机可执行 `bash` 或改为 PowerShell 脚本）**
+
+项目 `.claude/settings.json` 片段（具体字段以你安装的 Claude Code 版本为准，详见官方 Hooks 文档）：
+
+```json
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/remind-vue-bug-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+`.claude/hooks/remind-vue-bug-guard.sh` 示例：
+
+```bash
+#!/usr/bin/env bash
+echo ""
+echo "[Claude Code] 若本次改动了 Vue：建议在对话中执行「按 vue-bug-guard 检查本次修改的 .vue 文件」。"
+```
+
+> 若团队要**硬门禁**，更常见的是 `PostToolUse` + 匹配 `Edit|Write` 跑 `pnpm exec eslint …` / `vue-tsc --noEmit`，与 Skill 互补：脚本拦语法与类型，Skill 做深一点的逻辑与边界审查。
+
+#### 小结：怎么选？
+
+- **每次生成代码时都要查一遍**：不必单独「命令」；在 **CLAUDE.md** 里写死流程，或养成在收尾时发一句「按 vue-bug-guard 检查…」。
+- **希望「开发完提醒到我」**：用 **`SessionEnd` Hook** 打印提醒，或 **`CLAUDE.md` 约定**；不要指望 Skill 自己弹系统通知。
+- **要完全自动、不依赖模型**：用 **ESLint / `vue-tsc` / CI**，Hooks 里调用它们；Skill 负责模型可读、可解释的补充审查。
+
+### 3.6 官方推荐 Skill 详解
 * `frontend-design` — 高质量 UI 生成
 这个 skill 的核心价值不只是让界面好看，而是让 Claude 生成的代码摆脱「AI 味」视觉风格，达到生产级别的 UI 质量。对于任何需要面向用户的产品，这是首选 skill。用 `/frontend-design` 调用，描述你想构建的内容即可。
 * `docx` / `xlsx` / `pptx` — 文档生成
@@ -222,7 +281,124 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
 * `explain-code` — 代码讲解
 自定义 skill 的经典示例，能让 Claude 用类比 + ASCII 图 + 逐步讲解的方式解释代码，非常适合 Code Review 或团队分享时使用。
 * `Figma` / `Notion` / `Atlassian` Skills
-官方 Skills 目录中有来自 `Figma`、`Notion`、`Atlassian` 等平台的合作 skill，配合对应的 MCP 连接器使用，能实现跨工具的自动化工作流。
+官方 Skills 目录中有来自 `Figma`、`Notion`、`Atlassian` 等平台的合作 skill，配合对应的 MCP 连接器使用，能实现跨工具的自动化工作流。Figma 侧 MCP 的安装与验证步骤见本文 **「四、MCP」** 与 **「四、Demo 实战 → 4.3」**。
+
+### 3.7 自定义 Skill 示例：Vue 文件隐患检查（`vue-bug-guard`）
+
+团队可以自建 Skill，把「Code Review 时容易漏掉的 Vue 坑」固化成可重复执行的工作流。下面示例聚焦：**在 `.vue` / `setup` 代码中提前发现一类「运行时或边界条件下才暴露」的问题**，例如访问了不存在的字段、缺少判空与兜底、异步与响应式误用等。
+
+#### 作用与价值
+
+- **统一审查口径**：不依赖个人经验，Claude 按 SKILL 中的清单逐项扫描，减少漏检。
+- **与业务解耦**：规则写在 `SKILL.md` 里，可按项目迭代（如 Pinia 模块命名、接口字段变更）随时调整。
+- **低成本触发**：仅在用户提到「检查 Vue」「Review 这个组件」「看有没有空指针风险」等场景加载完整指令，节省 token。
+
+#### 建议覆盖的检查维度（可按项目裁剪）
+
+| 类别 | 典型问题 | 说明 |
+|------|----------|------|
+| **对象字段** | `props` / `data` / `store` / 接口返回上访问了未声明或已重命名的字段 | 对照类型定义、`defineProps`、API 文档；标出「可能为 `undefined`」的链式访问 |
+| **判空与兜底** | 模板或脚本中直接 `obj.a.b`、`list[0]`、`route.query.xxx` 未考虑空对象 / 空数组 | 建议可选链 `?.`、默认值、`v-if` 守卫、计算属性内收敛 |
+| **列表与索引** | `v-for` 与数据源不同步、`key` 不稳定、异步赋值前渲染 | 检查 `key` 来源、空列表占位、加载态 |
+| **异步与响应式** | `async` 里未 `try/catch`、解构丢失响应式、`watch` 依赖遗漏 | 标出未处理 rejection、误用 `toRefs` 等 |
+| **模板与指令** | `v-html` 安全风险、`v-if` / `v-show` 混用导致状态不一致 | 按团队规范给出风险等级 |
+| **与 TS 配合** | `any` 绕过类型检查、可选链与类型断言矛盾 | 提示收紧类型或运行时校验 |
+
+#### 目录结构示例
+
+```
+.claude/skills/vue-bug-guard/
+    ├── SKILL.md
+    └── resources/
+        └── checklist.md   # 可选：更长的检查表或项目专有名词表
+```
+
+#### `SKILL.md` 示例（可直接复制后按项目修改）
+
+```markdown
+---
+name: vue-bug-guard
+description: 审查 Vue 单文件组件与 Composition API 中常见的运行时风险（字段不存在、判空不足、异步与响应式误用等）。当用户要求检查 Vue 代码、Review 组件、或排查潜在 BUG 时触发。
+---
+
+你是负责「Vue 代码隐患扫描」的审查助手。用户会提供文件路径、片段或整个 `.vue` 文件，请按下述流程输出，**不要急于重写代码**，先完成分析与分级。
+
+## 输出结构
+
+1. **摘要**：用 2～4 句话说明整体风险等级（高 / 中 / 低）与主要问题类型。
+2. **问题清单（表格）**：列 | 位置（行号或片段） | 类别 | 描述 | 建议 |
+3. **可优先修复项**：最多 3 条，按影响面排序。
+4. **可选**：若信息不足（例如缺少类型定义或接口契约），列出需要用户补充的信息。
+
+## 必须检查的项
+
+- **字段存在性**：对 `props`、`store`、`reactive`/`ref`、`route.query`、`API` 返回值等，凡出现链式属性访问，判断是否存在「未定义」或「与类型/接口不一致」风险。
+- **判空与兜底**：对可能为 `null`/`undefined`/空数组的变量，模板是否直接深层访问；脚本侧是否缺少 `?.`、默认值、`Array.isArray` 等。
+- **列表渲染**：`v-for` 的 `key` 是否稳定；是否在数据未就绪时渲染子项。
+- **异步**：`async/await` 是否有 `try/catch` 或全局错误处理；是否在 `catch` 中吞掉错误但未提示。
+- **响应式**：是否对 `reactive` 对象整体替换导致引用丢失；`watch` 是否监听错数据源。
+
+## 约束
+
+- 若项目使用 TypeScript，优先结合类型信息推断；若无类型，则明确标注「推断」与「需确认」。
+- 不编造不存在的 API；对不确定处标注「待确认」。
+- 若用户仅要求「快速扫一眼」，可只输出摘要 + 高优先级问题。
+```
+
+#### 使用与调试建议
+
+- **怎么触发、怎么做到「结束提醒」**：见上文 **「3.5 Skill 使用」**（对话、`CLAUDE.md`、Hooks、`SessionEnd` 提醒与 ESLint 分工）。
+- **调优**：把团队真实踩坑案例（如某次线上 `undefined` 字段）追加到 `SKILL.md` 的「必须检查的项」或 `resources/checklist.md`，Skill 会越用越贴合仓库。
+- **与 CI 配合**：同一套清单可交给 ESLint、`vue-tsc` 规则或自定义脚本做自动化；Skill 负责**人工 Review 阶段**的补位与解释，二者不冲突。
+
+## 四、MCP（Model Context Protocol）
+
+**MCP（Model Context Protocol）** 是 Anthropic 推动的开放标准，用于在 AI 应用与外部数据源、工具之间建立**统一、可组合**的连接。Claude Code 通过 MCP 可以把 GitHub、Figma、数据库、内部 API 等接到同一会话里，由模型按需调用，而不是把密钥和接口细节写死在 Prompt 里。
+
+### 4.1 MCP 与 Skills 的分工
+
+| 维度 | Skills | MCP |
+|------|--------|-----|
+| **本质** | 可加载的「专业知识包」（SKILL.md + 资源） | 与外部**实时系统**通信的协议与连接器 |
+| **典型用途** | 规范检查、文档模板、领域工作流 | 读 Issue、拉设计稿、查库、调内部服务 |
+| **数据时效** | 随 Skill 文件更新 | 每次调用走服务端，接近实时 |
+
+二者常配合使用：Skill 约束「怎么做」，MCP 提供「连哪里、取什么数据」。
+
+### 4.2 在 Claude Code 中接入 MCP 的常见方式
+
+- **官方插件市场**：部分服务（如 Figma）提供 `claude-plugins-official` 中的插件，安装后按提示完成 OAuth 授权即可。
+- **远程 MCP（HTTP）**：服务端提供标准 MCP URL（例如 Figma 远程端点 `https://mcp.figma.com/mcp`），在支持 HTTP MCP 的客户端中配置 `url` + `type: http`。
+- **本地 / 桌面 MCP**：部分工具在本地起 HTTP 服务（如 Figma 桌面端在 Dev Mode 下暴露 `http://127.0.0.1:3845/mcp`），需本机客户端与 Claude Code 在同一环境，再通过 `claude mcp add` 等方式挂载。
+
+配置完成后，模型会在需要时 **列出工具（list tools）→ 调用工具 → 把结果写回对话**，你只需用自然语言描述任务并粘贴链接或上下文即可。
+
+### 4.3 MCP 结构示意
+```mermaid
+graph TB
+    A["Claude"]
+    B["MCP Server"]
+    C["External Service"]
+
+    A -->|Request: list_issues| B
+    B -->|Query| C
+    C -->|Data| B
+    B -->|Response| A
+
+    A -->|Request: create_issue| B
+    B -->|Action| C
+    C -->|Result| B
+    B -->|Response| A
+
+    style A fill:#e1f5fe,stroke:#333,color:#333
+    style B fill:#f3e5f5,stroke:#333,color:#333
+    style C fill:#e8f5e9,stroke:#333,color:#333
+```
+
+> **提示**：首次使用某 MCP 时，终端或界面通常会引导你完成登录 / OAuth；仅授权你信任的连接器，并注意文件与仓库的访问范围。
+
+---
+
 ## 三、Claude Code vs OpenAI Codex 深度对比
 
 ### 3.1 全维度对比矩阵
@@ -282,6 +458,7 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
 
 2. **添加需求描述** 
    - 给待办事项增加三种级别：高、中、低。
+
 3. **运行项目**
    - 切换至bash模式 
    - 运行项目 npm run dev 
@@ -295,6 +472,41 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
 
 5. **提交代码**
 
+### 4.3 Demo：完成 Figma MCP 安装与验证
+
+Figma 提供 **远程 MCP（推荐）** 与 **桌面 MCP（备选）** 两种形态；下面以官方推荐的远程方式为例，演示在 Claude Code 中「完成下载 / 安装插件并可用」的完整路径。更细的说明见 [Figma Help：Remote MCP server](https://help.figma.com/hc/en-us/articles/35281350665623-Figma-MCP-collection-How-to-set-up-the-Figma-remote-MCP-server-preferred)。
+
+#### 步骤 1：安装官方 Figma 插件（市场源）
+
+在终端执行（需已安装全局 `claude-code` 并可正常 `claude` 启动）：
+
+```bash
+claude plugin install figma@claude-plugins-official
+```
+
+安装过程会从官方插件市场拉取 **Figma MCP 相关包**，即完成「下载 / 安装」主体；若网络较慢，可多试几次或检查代理。
+
+#### 步骤 2：重启 Claude Code
+
+完全退出当前 `claude` 会话后重新进入项目目录执行 `claude`，确保新插件被加载。
+
+#### 步骤 3：授权 Figma
+
+1. 在 Claude Code 中输入 `/plugin`（或打开插件管理界面，以你当前版本为准）。
+2. 在「已安装」中找到 **figma**，按提示跳转浏览器完成 **Figma 账号 OAuth 授权**。
+3. 授权成功后，MCP 工具才会在会话中可用。
+
+#### 步骤 4：验证是否接通
+
+1. 在 Figma 中打开设计文件，选中某个 Frame 或图层，使用 **Copy link to selection** 复制链接。
+2. 在 Claude Code 里发送需求，例如：「根据以下 Figma 链接，说明布局结构并给出 Vue 组件拆分建议：[粘贴链接]」。
+3. 若模型能够拉取设计上下文（尺寸、结构、Dev Mode 相关信息等），即表示 **Figma MCP 已正确安装并完成授权**。
+
+#### 备选：桌面 MCP（本机 Figma 应用）
+
+若需使用本机 Figma 桌面版暴露的 MCP：在桌面端打开文件并进入 **Dev Mode**，在侧栏启用 MCP Server，将给出的本地地址（通常为 `http://127.0.0.1:3845/mcp`）按 Claude Code 文档配置为 HTTP MCP；具体见 [Figma Help：Desktop MCP server](https://help.figma.com/hc/en-us/articles/35281186390679-Figma-MCP-collection-How-to-setup-the-Figma-desktop-MCP-server-alternative)。
+
+---
 
 ### 6.2 Prompt 最佳实践
 
