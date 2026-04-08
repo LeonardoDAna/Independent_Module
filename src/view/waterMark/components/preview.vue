@@ -132,7 +132,9 @@ watch(
 
 <style scoped>
 .preview_container {
-  /* width: 500px;
-    height: 200px; */
+  border-radius: 8px;
+  border: 1px solid #e8eaf0;
+  background-color: #f9fafb;
+  display: block;
 }
 </style>
