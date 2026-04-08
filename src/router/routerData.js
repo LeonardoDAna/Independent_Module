@@ -43,6 +43,13 @@ export let routerData = [
                 path: "watermark",
                 component: () => import("@/view/waterMark/index.vue"),
                 label: "批量加水印",
+            },            
+            {
+                name: "magnifyingGlass",
+                tags: ["js", "canvas"],
+                path: "magnifyingGlass",
+                component: () => import("@/view/magnifyingGlass/index.vue"),
+                label: "放大镜",
             },
         ],
     },
