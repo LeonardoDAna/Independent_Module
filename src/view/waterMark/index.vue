@@ -5,6 +5,7 @@ import { useAppStore } from "@/stores/modules/app";
 import preview from "./components/preview.vue";
 import elColorPicker from "el-color-picker";
 import { message } from "ant-design-vue";
+import { CloseOutlined } from "@ant-design/icons-vue";
 
 const fileInput = ref();
 const canvasRef = ref();
@@ -38,6 +39,9 @@ let typeIndex = ref(0);
 const setupData = reactive({
   photoList: [],
 });
+
+/** 操作区「水印结果」当前展示的列表项下标（多图时切换预览，canvas 仍全部挂载以便下载） */
+const activeResultIndex = ref(0);
 
 const isMobile = computed(() => {
   return appStore.getIsMoblie;
@@ -105,6 +109,7 @@ const getFiles = async (e) => {
   try {
     const images = await Promise.all(requestList);
     setupData.photoList = images;
+    activeResultIndex.value = 0;
   } catch (error) {
     console.error(error);
   }
@@ -118,6 +123,46 @@ const getImgInfo = (index, imgUrl) => {
     setupData.photoList[index].height = img.height;
     setupData.photoList[index].width = img.width;
   };
+};
+
+/**
+ * 从列表中移除指定索引的图片。
+ * @param {number} index - 要移除项在 `setupData.photoList` 中的下标
+ */
+const removePhoto = (index) => {
+  const prevActive = activeResultIndex.value;
+  setupData.photoList.splice(index, 1);
+  if (prevActive > index) {
+    activeResultIndex.value = prevActive - 1;
+  } else if (prevActive === index) {
+    activeResultIndex.value = Math.min(prevActive, Math.max(0, setupData.photoList.length - 1));
+  }
+};
+
+/**
+ * 多图切换条上展示的短文件名。
+ * @param {string} rawName
+ * @param {number} index - 从 0 开始的序号（用于无文件名时占位）
+ * @returns {string}
+ */
+const shortPreviewLabel = (rawName, index) => {
+  const name = String(rawName || "").trim() || `图片${index + 1}`;
+  return name.length > 14 ? `${name.slice(0, 12)}…` : name;
+};
+
+/**
+ * 生成带水印导出用的安全、唯一文件名（含 .png）。
+ * @param {string} rawName - 原始上传文件名
+ * @param {number} index - 当前项在列表中的下标
+ * @returns {string}
+ */
+const buildWatermarkedFileName = (rawName, index) => {
+  const ts = dayjs().format("YYYYMMDDHHmmss");
+  const base = String(rawName || "image")
+    .replace(/\.[^.]+$/, "")
+    .replace(/[\\/:*?"<>|]/g, "_")
+    .trim() || "image";
+  return `${base}_watermark_${index}_${ts}.png`;
 };
 
 const addWaterMark = () => {
@@ -205,15 +250,24 @@ const waterMarkInit = (img, index) => {
   }
 };
 
+/**
+ * 依次触发每张 canvas 的下载，文件名唯一并错开时间以降低浏览器合并/拦截概率。
+ * @param {Array<{ name?: string }>} images - 与 canvas 顺序一致的列表项
+ */
 const downloadImages = (images) => {
-  images.forEach((img, index) => {
-    let canvas = document.getElementsByClassName(`canvasRef_${index}`)[0];
-    const base64Img = canvas.toDataURL("image/png");
-    var a = document.createElement("a");
-    var event = new MouseEvent("click");
-    a.download = dayjs().valueOf("YYYY-MM-DD HH:mm:ss");
-    a.href = base64Img;
-    a.dispatchEvent(event);
+  const delayMs = 80;
+  images.forEach((item, index) => {
+    setTimeout(() => {
+      const canvas = document.getElementsByClassName(`canvasRef_${index}`)[0];
+      if (!canvas) {
+        return;
+      }
+      const base64Img = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.download = buildWatermarkedFileName(item.name, index);
+      a.href = base64Img;
+      a.dispatchEvent(new MouseEvent("click"));
+    }, index * delayMs);
   });
 };
 
@@ -242,7 +296,17 @@ const handleColorPickerChange = (e) => {
       <div class="imgList">
         <template v-for="(item, index) in setupData.photoList" :key="index">
           <div class="imgItem">
-            <img :src="item.image.currentSrc" alt="" />
+            <div class="imgItem-thumb">
+              <img :src="item.image.currentSrc" alt="" />
+              <button
+                type="button"
+                class="imgItem-remove"
+                aria-label="移除图片"
+                @click.stop="removePhoto(index)"
+              >
+                <CloseOutlined />
+              </button>
+            </div>
             <div class="imgItem-info">
               <div class="img-name">{{ item.name }}</div>
               <div class="img-size">{{ (item.size / 1024).toFixed(1) }} KB</div>
@@ -306,14 +370,38 @@ const handleColorPickerChange = (e) => {
             <div class="preview-label">效果预览</div>
             <preview :width="waterMarkConfig.previewCanvas_width" :config="waterMarkConfig" />
           </div>
-          <div class="waterMarkList">
-            <template v-for="(item, index) in setupData.photoList" :key="index">
-              <canvas
-                :ref="`canvasRef_${index}`"
-                :class="`canvasRef_${index}`"
-                class="canvas_container"
-              ></canvas>
-            </template>
+          <div v-if="setupData.photoList.length" class="waterMarkResult">
+            <div v-if="setupData.photoList.length > 1" class="waterMarkResult-toolbar">
+              <span class="waterMarkResult-toolbarLabel">水印结果</span>
+              <a-radio-group
+                v-model:value="activeResultIndex"
+                button-style="solid"
+                size="small"
+                class="waterMarkResult-radioGroup"
+              >
+                <a-radio-button
+                  v-for="(item, index) in setupData.photoList"
+                  :key="index"
+                  :value="index"
+                >
+                  {{ shortPreviewLabel(item.name, index) }}
+                </a-radio-button>
+              </a-radio-group>
+            </div>
+            <div class="waterMarkList">
+              <template v-for="(item, index) in setupData.photoList" :key="index">
+                <div
+                  v-show="activeResultIndex === index"
+                  class="waterMarkList-item"
+                >
+                  <canvas
+                    :ref="`canvasRef_${index}`"
+                    :class="`canvasRef_${index}`"
+                    class="canvas_container"
+                  ></canvas>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </div>
@@ -408,6 +496,12 @@ const handleColorPickerChange = (e) => {
   flex-direction: column;
   align-items: center;
   gap: 6px;
+}
+
+.imgItem-thumb {
+  position: relative;
+  width: 80px;
+  height: 80px;
 
   img {
     height: 80px;
@@ -415,6 +509,30 @@ const handleColorPickerChange = (e) => {
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #e8eaf0;
+    display: block;
+  }
+}
+
+.imgItem-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(220, 53, 69, 0.95);
   }
 }
 
@@ -491,16 +609,77 @@ const handleColorPickerChange = (e) => {
   font-weight: 500;
 }
 
-.waterMarkList {
+.waterMarkResult {
   display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+}
+
+.waterMarkResult-toolbar {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
-  gap: 12px;
+}
+
+.waterMarkResult-toolbarLabel {
+  font-size: 12px;
+  color: #7a7f99;
+  font-weight: 500;
+  line-height: 24px;
+  flex-shrink: 0;
+}
+
+.waterMarkResult-radioGroup {
+  flex: 1;
+  min-width: 0;
+
+  :deep(.ant-radio-group) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  :deep(.ant-radio-button-wrapper) {
+    border-radius: 6px !important;
+  }
+}
+
+.waterMarkList {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  max-height: min(480px, 70vh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.waterMarkList-item {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  max-height: min(480px, 70vh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid #e8eaf0;
+  border-radius: 8px;
+  background: #fafbfc;
 }
 
 .canvas_container {
+  display: block;
   border-radius: 8px;
-  border: 1px solid #e8eaf0;
   max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 // ---- 按钮 ----
@@ -567,9 +746,15 @@ const handleColorPickerChange = (e) => {
     padding: 16px;
   }
 
-  .waterMarkList {
-    overflow-x: auto;
-    flex-wrap: nowrap;
+  .waterMarkResult-radioGroup {
+    width: 100%;
+
+    :deep(.ant-radio-group) {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
   }
 
   .mobile-action-bar {
