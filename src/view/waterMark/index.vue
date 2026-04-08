@@ -47,7 +47,6 @@ onMounted(() => {});
 
 const setCanvasSize = () => {
   console.log("setCanvasSize");
-  // 获取页面大小
   const waterMark = document.getElementsByClassName("waterMark")[0];
   waterMarkConfig.previewCanvas_width = waterMark.offsetWidth - 40;
   console.log(waterMarkConfig.previewCanvas_width);
@@ -77,7 +76,7 @@ const loadImageFromBase64 = (blobimage) => {
   return new Promise((resolve, reject) => {
     const blob = new Blob([blobimage], {
       type: blobimage.type || "image/jpg",
-    }); //类型一定要写！！
+    });
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     reader.onload = () => {
@@ -99,7 +98,7 @@ const getFiles = async (e) => {
       name: file.name,
       type: file.type,
       size: file.size,
-      image, // 假设 loadImageFromBase64 返回的是图像数据
+      image,
     }));
   });
 
@@ -140,12 +139,10 @@ const waterMarkInit = (img, index) => {
   let config = {
     fontSize: waterMarkConfig.fontSize,
     text: waterMarkConfig.content,
-    // gap: 300 * scale,
     gap: waterMarkConfig.gap,
     waterMark_width: waterMarkConfig.waterMark_width,
     waterMark_height: waterMarkConfig.waterMark_height,
   };
-  // const canvas = canvasRef.value;
   const canvas = document.getElementsByClassName(`canvasRef_${index}`)[0];
   const ctx = canvas.getContext("2d");
 
@@ -153,17 +150,14 @@ const waterMarkInit = (img, index) => {
   canvas.height = img.height * scale;
 
   ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale);
-  // 旋转 45 度让文字变倾斜
 
   const fontSize = Math.floor(canvas.width / 30);
 
   ctx.font = `${waterMarkConfig.fontSize}px Arial`;
-  ctx.fillStyle = waterMarkConfig.color; // 黑色文字，透明度为0.5
+  ctx.fillStyle = waterMarkConfig.color;
   ctx.textBaseline = "middle";
 
   let count = 10;
-
-  // ctx.rotate((Math.PI / 180) * 45);
   let line = 0;
   let column = 0;
 
@@ -195,20 +189,19 @@ const waterMarkInit = (img, index) => {
       column = 0;
     }
 
-    // 将文字绘制到Canvas上
-    ctx.save(); // 保存当前状态
-    ctx.translate(x, y); // 移动到指定位置
+    ctx.save();
+    ctx.translate(x, y);
     switch (waterMarkConfig.type) {
       case 1:
-        ctx.rotate((45 * Math.PI) / 180); // 旋转45度
+        ctx.rotate((45 * Math.PI) / 180);
         break;
       case 2:
-        ctx.rotate((-45 * Math.PI) / 180); // 旋转45度
+        ctx.rotate((-45 * Math.PI) / 180);
       case 3:
         break;
     }
-    ctx.fillText(config.text, 0, 0); // 绘制文字
-    ctx.restore(); // 恢复到之前的状态
+    ctx.fillText(config.text, 0, 0);
+    ctx.restore();
   }
 };
 
@@ -216,10 +209,10 @@ const downloadImages = (images) => {
   images.forEach((img, index) => {
     let canvas = document.getElementsByClassName(`canvasRef_${index}`)[0];
     const base64Img = canvas.toDataURL("image/png");
-    var a = document.createElement("a"); // 生成一个a元素
-    var event = new MouseEvent("click"); // 创建一个单击事件
-    a.download = dayjs().valueOf("YYYY-MM-DD HH:mm:ss"); // 设置图片名称
-    a.href = base64Img; // 将生成的URL设置为a.href属性
+    var a = document.createElement("a");
+    var event = new MouseEvent("click");
+    a.download = dayjs().valueOf("YYYY-MM-DD HH:mm:ss");
+    a.href = base64Img;
     a.dispatchEvent(event);
   });
 };
@@ -230,268 +223,381 @@ const handleDownload = () => {
 
 const handleColorPickerChange = (e) => {
   console.log(e);
-
   waterMarkConfig.color = e;
 };
 </script>
 
 <template>
   <div class="waterMark">
-    <div class="uploadFilesBtn" @click="upload">批量上传图片</div>
-    <input
-      ref="fileInput"
-      type="file"
-      id="fileInput"
-      name="file"
-      multiple
-      @change="getFiles"
-    />
-    <div>
-      <h4>图片列表</h4>
+    <!-- 上传区 -->
+    <div class="upload-area" @click="upload">
+      <span class="upload-icon">+</span>
+      <span>批量上传图片</span>
+    </div>
+    <input ref="fileInput" type="file" id="fileInput" name="file" multiple @change="getFiles" />
+
+    <!-- 图片列表 -->
+    <div class="section">
+      <div class="section-title">图片列表</div>
       <div class="imgList">
         <template v-for="(item, index) in setupData.photoList" :key="index">
           <div class="imgItem">
             <img :src="item.image.currentSrc" alt="" />
             <div class="imgItem-info">
-              <div>{{ item.name }}</div>
-              <div>{{ item.size }}</div>
+              <div class="img-name">{{ item.name }}</div>
+              <div class="img-size">{{ (item.size / 1024).toFixed(1) }} KB</div>
             </div>
           </div>
         </template>
+        <div v-if="setupData.photoList.length === 0" class="imgList-empty">暂无图片</div>
       </div>
     </div>
-    <h4>操作栏</h4>
-    <div class="operation_container">
-      <div class="left_container">
-        <!-- <canvas ref="testCanvasRef" class="test_canvas_container"></canvas> -->
-        <preview :width="waterMarkConfig.previewCanvas_width" :config="waterMarkConfig" />
-      </div>
-      <div class="middle_container">
-        <a-form
-          :model="waterMarkConfig"
-          class="demo-form-inline"
-          label-position="top"
-          :inline="true"
-          :label-col="labelCol"
-        >
-          <a-row>
-            <a-col :span="12">
-              <a-form-item label="内容">
-                <a-input v-model:value="waterMarkConfig.content" />
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-              <a-form-item label="位置">
-                <a-select
-                  v-model:value="waterMarkConfig.type"
-                  placeholder="please select your zone"
-                >
-                  <template v-for="item in types" :key="item">
-                    <a-select-option :value="item.value">
-                      {{ item.label }}
-                    </a-select-option>
-                  </template>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-              <a-form-item label="字号">
-                <a-input-number v-model:value="waterMarkConfig.fontSize" :min="1">
-                  <template #suffix>
-                    <span>px</span>
-                  </template>
-                </a-input-number>
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-              <a-form-item label="颜色">
-                <el-color-picker
-                  :value="waterMarkConfig.color"
-                  show-alpha
-                  @change="handleColorPickerChange"
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-              <a-form-item label="水印宽度">
-                <a-input-number :min="1" v-model:value="waterMarkConfig.waterMark_width">
-                  <template #suffix>
-                    <span>px</span>
-                  </template>
-                </a-input-number>
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-              <a-form-item label="水印高度">
-                <a-input-number :min="1" v-model:value="waterMarkConfig.waterMark_height">
-                  <template #suffix>
-                    <span>px</span>
-                  </template>
-                </a-input-number>
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </a-form>
-      </div>
-      <div class="right_container">
-        <div class="operation_btn addBtn" @click="addWaterMark">添加水印</div>
-        <div class="operation_btn downloadBtn" @click="handleDownload">下载图片</div>
-        <!-- <div class="operation_btn resetBtn">重置</div> -->
+
+    <!-- 主操作区：侧边栏配置 + 右侧内容 -->
+    <div class="section">
+      <div class="section-title">操作区</div>
+      <div class="main-layout">
+        <!-- 左侧配置面板 -->
+        <div class="sidebar">
+          <a-form :model="waterMarkConfig" :label-col="labelCol" layout="vertical">
+            <a-form-item label="内容">
+              <a-input v-model:value="waterMarkConfig.content" />
+            </a-form-item>
+            <a-form-item label="位置">
+              <a-select v-model:value="waterMarkConfig.type">
+                <template v-for="item in types" :key="item">
+                  <a-select-option :value="item.value">{{ item.label }}</a-select-option>
+                </template>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="字号">
+              <a-input-number v-model:value="waterMarkConfig.fontSize" :min="1" style="width:100%">
+                <template #suffix><span>px</span></template>
+              </a-input-number>
+            </a-form-item>
+            <a-form-item label="颜色">
+              <el-color-picker
+                :value="waterMarkConfig.color"
+                show-alpha
+                @change="handleColorPickerChange"
+              />
+            </a-form-item>
+            <a-form-item label="水印宽度">
+              <a-input-number :min="1" v-model:value="waterMarkConfig.waterMark_width" style="width:100%">
+                <template #suffix><span>px</span></template>
+              </a-input-number>
+            </a-form-item>
+            <a-form-item label="水印高度">
+              <a-input-number :min="1" v-model:value="waterMarkConfig.waterMark_height" style="width:100%">
+                <template #suffix><span>px</span></template>
+              </a-input-number>
+            </a-form-item>
+            <!-- PC端按钮在侧边栏底部 -->
+            <div class="sidebar-actions">
+              <div class="operation_btn addBtn" @click="addWaterMark">添加水印</div>
+              <div class="operation_btn downloadBtn" @click="handleDownload">下载图片</div>
+            </div>
+          </a-form>
+        </div>
+
+        <!-- 右侧：预览 + 水印结果 -->
+        <div class="content-area">
+          <div class="preview-wrap">
+            <div class="preview-label">效果预览</div>
+            <preview :width="waterMarkConfig.previewCanvas_width" :config="waterMarkConfig" />
+          </div>
+          <div class="waterMarkList">
+            <template v-for="(item, index) in setupData.photoList" :key="index">
+              <canvas
+                :ref="`canvasRef_${index}`"
+                :class="`canvasRef_${index}`"
+                class="canvas_container"
+              ></canvas>
+            </template>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="waterMarkList">
-      <template v-for="(item, index) in setupData.photoList" :key="index">
-        <canvas
-          :ref="`canvasRef_${index}`"
-          :class="`canvasRef_${index}`"
-          class="canvas_container"
-        ></canvas>
-      </template>
+
+    <!-- 移动端底部固定操作栏 -->
+    <div class="mobile-action-bar">
+      <div class="operation_btn addBtn" @click="addWaterMark">添加水印</div>
+      <div class="operation_btn downloadBtn" @click="handleDownload">下载图片</div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@media (max-width: 600px) {
-  // 手机端
-  .waterMark {
-    width: 100%;
-  }
-  .operation_container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+#fileInput {
+  display: none;
+}
+
+.waterMark {
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #f5f6fa;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+// ---- 上传区 ----
+.upload-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 2px dashed #4f80ff;
+  border-radius: 10px;
+  height: 64px;
+  cursor: pointer;
+  color: #4f80ff;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #f0f4ff;
+  transition: background 0.2s;
+  user-select: none;
+
+  &:hover {
+    background-color: #e3eaff;
   }
 
-  .left_container {
-    // width: 100%;
-    background-color: #ccccccff;
+  .upload-icon {
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1;
   }
-  .right_container {
-    display: grid;
+}
+
+// ---- Section 卡片 ----
+.section {
+  margin-top: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e8eaf0;
+  overflow: hidden;
+}
+
+.section-title {
+  padding: 14px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7a7f99;
+  border-bottom: 1px solid #e8eaf0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+// ---- 图片列表 ----
+.imgList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 20px;
+  min-height: 80px;
+}
+
+.imgList-empty {
+  color: #7a7f99;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+}
+
+.imgItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  img {
+    height: 80px;
+    width: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e8eaf0;
+  }
+}
+
+.imgItem-info {
+  text-align: center;
+  max-width: 80px;
+}
+
+.img-name {
+  font-size: 11px;
+  color: #1a1d2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+}
+
+.img-size {
+  font-size: 11px;
+  color: #7a7f99;
+}
+
+// ---- 主布局 ----
+.main-layout {
+  display: flex;
+  min-height: 420px;
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  padding: 20px 16px;
+  border-right: 1px solid #e8eaf0;
+  display: flex;
+  flex-direction: column;
+
+  :deep(.ant-form-item) {
+    margin-bottom: 14px;
+  }
+
+  :deep(.ant-form-item-label > label) {
+    font-size: 12px;
+    color: #7a7f99;
+    font-weight: 500;
+  }
+}
+
+.sidebar-actions {
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.content-area {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-label {
+  font-size: 12px;
+  color: #7a7f99;
+  font-weight: 500;
+}
+
+.waterMarkList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.canvas_container {
+  border-radius: 8px;
+  border: 1px solid #e8eaf0;
+  max-width: 100%;
+}
+
+// ---- 按钮 ----
+.operation_btn {
+  height: 40px;
+  line-height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.2s, transform 0.1s;
+  width: 100%;
+
+  &:hover {
+    opacity: 0.88;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.addBtn {
+  background-color: #4f80ff;
+}
+
+.downloadBtn {
+  background-color: #36c27a;
+}
+
+// ---- 移动端底部固定栏 ----
+.mobile-action-bar {
+  display: none;
+}
+
+// ---- 响应式 ----
+@media (max-width: 600px) {
+  .waterMark {
     width: 100%;
-    grid-template-columns: repeat(2, 1fr); /* 6 列 */
-    grid-template-rows: repeat(2, 1fr); /* 2 行 */
-    gap: 10px; /* 网格间距 */
+    padding: 16px;
+    padding-bottom: 80px;
   }
+
+  .main-layout {
+    flex-direction: column;
+    min-height: unset;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e8eaf0;
+    padding: 16px;
+
+    .sidebar-actions {
+      display: none;
+    }
+  }
+
+  .content-area {
+    padding: 16px;
+  }
+
   .waterMarkList {
-    display: flex;
-    align-items: flex-start;
     overflow-x: auto;
-    .canvas_container {
-      padding-top: 10px;
-      padding-right: 10px;
+    flex-wrap: nowrap;
+  }
+
+  .mobile-action-bar {
+    display: flex;
+    gap: 12px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-top: 1px solid #e8eaf0;
+    z-index: 100;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+
+    .operation_btn {
+      flex: 1;
     }
   }
 }
 
 @media (min-width: 601px) {
-  // pc端
   .waterMark {
-    width: 1000px;
+    width: 960px;
   }
-  .operation_container {
-    display: flex;
-    // flex-direction: column;
-    align-items: center;
-    height: 200px;
-    flex-wrap: wrap;
-  }
-  .left_container {
-    width: 200px;
-    height: 200px;
-    background-color: #ccccccff;
-  }
-  .middle_container {
-    width: 100%;
-    height: 200px;
-    flex: 1;
-    padding: 0 10px;
-    .waterMarkConfig {
-      background-color: #0077ff;
-    }
-  }
-  .right_container {
-    /* width: 50%; */
-    padding: 0 10px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    /* align-items: center; */
-    // justify-content: space-between;
-  }
-  .waterMarkList {
-    display: flex;
-    align-items: flex-start;
-    overflow-x: auto;
-    .canvas_container {
-      padding-top: 10px;
-      padding-right: 10px;
-    }
-  }
-}
 
-.waterMark {
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #ffff;
-  height: 100%;
-}
-.operation_container {
-  display: flex;
-  // height: 200px;
-}
-
-.addBtn {
-  background-color: #5b97c8;
-  /* margin-bottom: 20px; */
-}
-.downloadBtn {
-  /* margin-bottom: 20px; */
-  background-color: #37c376;
-}
-.operation_btn {
-  width: 180px;
-  height: 50px;
-  line-height: 50px;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-  color: #ffff;
-  text-align: center;
-  margin-bottom: 10px;
-}
-.uploadFilesBtn {
-  border: 2px dashed #0077ff;
-  height: 50px;
-  line-height: 50px;
-  cursor: pointer;
-  text-align: center;
-}
-.resetBtn {
-  background-color: #a50000ff;
-}
-.canvas_container {
-  margin-top: 10px;
-}
-#fileInput {
-  display: none;
-}
-.imgList {
-  display: flex;
-  /* width: 80vw; */
-  min-height: 100px;
-  padding: 10px 0;
-  background-color: #dddddd;
-}
-.imgItem {
-  padding: 0 10px;
-}
-.imgItem img {
-  /* width: 100px; */
-  height: 100px;
-}
-.ant-input-number {
-  width: 100%;
+  .mobile-action-bar {
+    display: none !important;
+  }
 }
 </style>
