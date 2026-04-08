@@ -6,7 +6,7 @@
       <!-- <span>摘要</span> -->
     </div>
     <div class="headerImg">
-      <img class="logoImg" src="@/assets/img/logo.png" alt="" />
+      <img @click="goHome" class="logoImg" src="@/assets/img/logo.png" alt="" />
     </div>
   </div>
 </template>
@@ -17,6 +17,10 @@ const router = useRouter();
 
 const goBlog = () => {
   router.push("/blog");
+};
+
+const goHome = () => {
+  router.push("/");
 };
 </script>
 

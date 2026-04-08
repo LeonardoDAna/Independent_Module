@@ -11,48 +11,57 @@
 export default {
   name: "magnifyingGlass",
   data() {
-    return {};
+    return {
+      rangeBox: null,
+    };
   },
-  mounted(){
-    this.bindMoveFn()
+  mounted() {
+    this.bindMoveFn();
   },
   methods: {
     bindMoveFn() {
-      let allBox = this.$refs.allBox
+      let allBox = this.$refs.allBox;
       allBox.addEventListener("mouseenter", this.onmoveStart);
       allBox.addEventListener("mousemove", this.onmove);
-      allBox.addEventListener("mouseleave", this.onmoveEnd);  
+      allBox.addEventListener("mouseleave", this.onmoveEnd);
     },
     onmoveStart(e) {
-      let rangeBox = document.createElement("div");
-      let allBox = document.querySelector(".allBox");
-      // rangeBox.setAttribute("class", "rangeBox");
-      rangeBox.className = "rangeBox"
-      allBox.appendChild(rangeBox);
+      const rangeBox = document.createElement("div");
+      rangeBox.className = "rangeBox";
+      this.$refs.allBox.appendChild(rangeBox);
+      this.rangeBox = rangeBox;
     },
 
     onmove(e) {
-      let rangeBox = document.querySelector(".rangeBox");
-      let showBox = document.querySelector(".showBox");
-      let rect = [e.offsetX, e.offsetY];
-      let eventH = rect[0] / showBox.offsetHeight;
-      let eventW = rect[1] / showBox.offsetWidth;
-      // if (e.offsetX >= rangeBox.offsetHeight / 2) {
-      rangeBox.style.left = `${rect[0] - 133 / 2}px`;
-      // }else if(e.offsetY >= rangeBox.offsetWidth / 2){
-      rangeBox.style.top = `${rect[1] - 133 / 2}px`;
-      // }
-      console.log(e.offsetX, e.offsetY);
+      const rangeBox = this.rangeBox;
+      const showBox = document.querySelector(".showBox");
+      const allBox = this.$refs.allBox;
+      const halfSize = 133 / 2;
+
+      // 边界限制
+      let left = Math.min(Math.max(e.offsetX - halfSize, 0), allBox.offsetWidth - 133);
+      let top = Math.min(Math.max(e.offsetY - halfSize, 0), allBox.offsetHeight - 133);
+
+      rangeBox.style.left = `${left}px`;
+      rangeBox.style.top = `${top}px`;
+
+      // 修复 X/Y 对应关系，基于放大后背景尺寸计算 position
+      const zoomedSize = 1200;
+      const scaleX = -(left / allBox.offsetWidth) * zoomedSize;
+      const scaleY = -(top / allBox.offsetHeight) * zoomedSize;
+
       showBox.setAttribute("zoomed", 1);
-      showBox.style.setProperty("--x", eventH);
-      showBox.style.setProperty("--y", eventW);
+      showBox.style.setProperty("--x", `${scaleX}px`);
+      showBox.style.setProperty("--y", `${scaleY}px`);
     },
 
     onmoveEnd(e) {
-      let rangeBox = document.querySelector(".rangeBox");
-      let showBox = document.querySelector(".showBox");
-      showBox.removeAttribute("zoomed", 1);
-      e.target.removeChild(rangeBox);
+      if (this.rangeBox) {
+        this.$refs.allBox.removeChild(this.rangeBox);
+        this.rangeBox = null;
+      }
+      const showBox = document.querySelector(".showBox");
+      showBox.removeAttribute("zoomed");
     },
   },
 };
@@ -65,7 +74,7 @@ export default {
 .imageBox {
   width: 400px;
   height: 400px;
-  background-image: url("~@/assets/img/counting.jpg");
+  background-image: url("@/assets/img/counting.jpg");
   /* background-position: 100% 100%; */
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -81,28 +90,36 @@ export default {
 .showBox {
   width: 400px;
   height: 400px;
-  background-image: url("~@/assets/img/counting.jpg");
-  /* background-position: 100% 100%; */
+  background-image: url("@/assets/img/counting.jpg");
   background-repeat: no-repeat;
   margin: 0 auto;
   background-size: 100% 100%;
 }
 .showBox[zoomed] {
   background-size: 1200px 1200px;
-  background-position: calc(var(--x) * 100%) calc(var(--y) * 100%);
+  background-position: var(--x) var(--y);
 }
 .rangeBox {
-  /* border: 1px solid #006dfb; */
   pointer-events: none;
-  border: 1px solid red;
-  background-color: rgba(44, 26, 26, 0.342);
-  /* width: calc(400/3); */
-  /* height: calc(400/3); */
+  border: 2px solid #4f80ff;
+  background-color: rgba(79, 128, 255, 0.1);
   z-index: 100;
   width: 133px;
   height: 133px;
   position: absolute;
-  /* top: calc(var(--absoX));
-      left: calc(var(--absoY)); */
+  box-sizing: border-box;
+}
+</style>
+
+<style>
+.rangeBox {
+  pointer-events: none;
+  border: 2px solid #4f80ff;
+  background-color: rgba(79, 128, 255, 0.1);
+  z-index: 100;
+  width: 133px;
+  height: 133px;
+  position: absolute;
+  box-sizing: border-box;
 }
 </style>

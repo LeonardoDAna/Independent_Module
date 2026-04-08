@@ -223,6 +223,10 @@ h1 {
   display: block;
   width: 100px;
   height: 100%;
+  transition: all 0.3s ease-in-out;
+  &:hover { 
+    transform: scale(1.2);
+  }
 }
 
 .inner-header {
