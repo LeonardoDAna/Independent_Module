@@ -12,9 +12,13 @@
         />
       </div>
 
-      <!-- 导航栏 -->
-      <div class="navBlock">
-        <MdCatalog :editorId="editorId" scrollElement="#main_container" />
+      <!-- 导航栏：onActive 时同步滚动侧栏，避免长目录看不到当前高亮项 -->
+      <div ref="navBlockRef" class="navBlock">
+        <MdCatalog
+          :editorId="editorId"
+          scrollElement="#main_container"
+          @onActive="onCatalogActive"
+        />
       </div>
     </div>
   </div>
@@ -39,6 +43,35 @@ const blog = ref();
 const editorId = "preview-only";
 const theme = "dark";
 const scrollElement = ref();
+/** @type {import('vue').Ref<HTMLElement | null>} */
+const navBlockRef = ref(null);
+
+/**
+ * 正文滚动导致目录高亮切换时，将高亮目录项滚入侧栏可视区域（与侧栏自身 overflow 滚动条联动）。
+ * 仅用「标题行顶部」对齐：含子目录时 `.md-editor-catalog-link` 根节点会包一整棵子树，
+ * 高度极大，若用 `getBoundingClientRect().bottom` 会把滚动条误拉到底部。
+ * @param {unknown} _tocItem - md-editor-v3 当前激活的目录项
+ * @param {HTMLElement | undefined} linkEl - 对应 `.md-editor-catalog-link` 根节点
+ */
+function onCatalogActive(_tocItem, linkEl) {
+  if (!linkEl || !navBlockRef.value) return;
+  nextTick(() => {
+    const nav = navBlockRef.value;
+    if (!nav) return;
+    const navRect = nav.getBoundingClientRect();
+    const elRect = linkEl.getBoundingClientRect();
+    const padding = 30;
+    let delta = 0;
+    if (elRect.top < navRect.top + padding) {
+      delta = elRect.top - navRect.top - padding;
+    } else if (elRect.top > navRect.bottom - padding) {
+      delta = elRect.top - navRect.bottom + padding;
+    }
+    if (delta !== 0) {
+      nav.scrollTo({ top: nav.scrollTop + delta, behavior: "smooth" });
+    }
+  });
+}
 
 onMounted(async () => {
   setupData.text = await getBlogFile();
@@ -173,21 +206,33 @@ const handleAnchorClick = (anchor) => {
   // overflow-y: auto;
 }
 
+/**
+ * 右侧目录：限制在视口高度内，条目过多时出现纵向滚动条。
+ * 勿用 height:100%（父级与正文同高会导致侧栏被撑满、无法滚动）。
+ */
 .navBlock {
   position: sticky;
   position: -webkit-sticky;
-  max-height: 100%;
-  overflow: auto;
   top: 30px;
+  align-self: flex-start;
+  flex-shrink: 0;
   width: 200px;
-  // border: 1px solid #222;
+  max-height: calc(100vh - 60px);
   padding: 20px;
   background-color: #ffffff;
   border-radius: 2px;
-  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
-    height: 0;
-    width: 0;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
   }
 }
 .catalog {

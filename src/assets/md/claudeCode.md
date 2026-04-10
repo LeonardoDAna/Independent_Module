@@ -157,10 +157,43 @@ claude code 一共有三种登录方式：
 └─ Anthropic Console
 ```
  
+### 2.3 权限模式
+
+Claude Code 通过 **权限模式（permission mode）** 控制：在编辑文件、执行 Shell、发起网络请求等可能改变环境的行为之前，是否暂停并请你确认。模式只通过 **CLI 状态栏 / VS Code 底部指示器 / 设置项** 切换，**不能**靠对话里「说一句切换模式」生效。
 
 <img src="/markdown/claudeCode_bash.jpg" alt="Claude Code 三种模式" />
 
-### 2.2 常用命令
+#### 2.3.1 默认模式（`default`）
+
+- **行为**：基线偏「每一步都可见」。**只读**类操作（读文件、浏览代码库）通常可连续进行；一旦涉及**写入/执行**（改文件、跑命令、网络请求等），会停下来请求批准。
+- **适合**：初次使用、敏感代码或密钥附近、希望**全程人工把关**的场景。
+- **说明**：无论哪种模式，对 [受保护路径](https://code.claude.com/docs/en/permission-modes#protected-paths)（如 `.git`、部分全局与 Claude 配置等）的写入都**不会**被自动批准，避免误伤仓库与配置。
+
+#### 2.3.2 自动接受编辑（`acceptEdits`）— 与「三档循环」中间档
+
+在终端里按 **`Shift+Tab`** 时，默认循环顺序为：**`default` → `acceptEdits` → `plan`**。截图或教程里常说的三种模式，中间这一档通常指 **`acceptEdits`**（VS Code 扩展中对应 **Edit automatically / 自动编辑**），**不是**下面单独开启的 **Auto 模式（`auto`）**。
+
+- **行为**：可在**工作目录**内**自动创建/编辑文件**，并自动批准一批常见文件系统命令（如 `mkdir`、`touch`、`mv`、`cp`、`rm` 等，以当前版本文档为准）。工作区外路径、其它 Bash、网络请求等仍会提示。
+- **适合**：你愿意在 **IDE / `git diff`** 里**事后审查**，而不是在对话里逐条点「允许编辑」。
+- **启动示例**：`claude --permission-mode acceptEdits`
+
+#### 2.3.3 计划模式（`plan`）
+
+- **行为**：**先调研、先出方案，不修改你的业务源代码**。可以读文件、用命令探索、写出实施计划；**不会对源码做实际编辑**（规划与执行分离）。需要确认时的提示规则与默认模式一致，核心是**约束为「只规划、不改代码」**。
+- **进入方式**：`Shift+Tab` 切到 plan；单条消息前缀 **`/plan`**；或 `claude --permission-mode plan`。
+- **计划就绪后**：可选择批准后进入 `auto`、进入 `acceptEdits`、仍逐项审核、继续迭代计划等（以当前版本交互为准）。
+
+#### 2.3.4 进阶：Auto 模式（`auto`，需单独开启）
+
+这是与 **`acceptEdits`** 不同的模式：在**满足账号、模型、提供方等条件**时，通过 **`--enable-auto-mode`** 等启用，尽量**减少权限弹窗**，并由**单独的分类器**在执行前评估风险；高风险操作仍可能被拦截。适用于长任务、希望减少「确认疲劳」但仍有一层自动把关时。**不适合**替代对敏感操作的 Code Review。细则与限制见官方文档 [Choose a permission mode](https://code.claude.com/docs/en/permission-modes)。
+
+#### 2.3.5 切换与默认模式
+
+| 方式 | 说明 |
+|------|------|
+| CLI | 会话中 **`Shift+Tab`** 在 `default` / `acceptEdits` / `plan` 间循环；启用可选模式后，循环中还会插入其它模式（顺序以文档为准） |
+| 启动参数 | 如 `claude --permission-mode plan` |
+| 配置文件 | 在 `settings` 中设置 `permissions.defaultMode`（如 `"acceptEdits"`）作为默认 |
 
 ## 三、Claude Code 核心能力 - Skills
 
@@ -216,7 +249,7 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
 
 **先理清机制**：Skill 是写进 `SKILL.md` 的「知识与步骤」，交给模型在对话里执行；它**不是**后台常驻进程，也不会像 ESLint 保存即跑那样在无对话时自动完成审查。因此：**「怎么用」= 如何触发模型按这份 Skill 做事**；**「开发完提醒我」= 用项目规则或 Hooks 做提醒/门禁**，二者常组合使用。
 
-#### 有哪些用法？
+#### 3.5.1 有哪些用法？
 
 | 方式 | 说明 | 适用场景 |
 |------|------|----------|
@@ -227,7 +260,7 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
 
 **不要指望的**：单独靠 Skill 自己在「你写代码时」无感运行——那需要下面 **Hooks 或外部脚本**。
 
-#### Hooks 能做什么？和 Skill 什么关系？
+#### 3.5.2 Hooks 能做什么？和 Skill 什么关系？
 
 [Hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) 是在 Claude Code **生命周期**里执行的一段 **Shell / HTTP / Prompt**（配置在 `~/.claude/settings.json` 或项目 `.claude/settings.json`，也可用 `/hooks` 管理）。它是**确定性**的：到点就执行。
 
@@ -265,7 +298,7 @@ echo "[Claude Code] 若本次改动了 Vue：建议在对话中执行「按 vue-
 
 > 若团队要**硬门禁**，更常见的是 `PostToolUse` + 匹配 `Edit|Write` 跑 `pnpm exec eslint …` / `vue-tsc --noEmit`，与 Skill 互补：脚本拦语法与类型，Skill 做深一点的逻辑与边界审查。
 
-#### 小结：怎么选？
+#### 3.5.3 小结：怎么选？
 
 - **每次生成代码时都要查一遍**：不必单独「命令」；在 **CLAUDE.md** 里写死流程，或养成在收尾时发一句「按 vue-bug-guard 检查…」。
 - **希望「开发完提醒到我」**：用 **`SessionEnd` Hook** 打印提醒，或 **`CLAUDE.md` 约定**；不要指望 Skill 自己弹系统通知。
@@ -281,19 +314,19 @@ echo "[Claude Code] 若本次改动了 Vue：建议在对话中执行「按 vue-
 * `explain-code` — 代码讲解
 自定义 skill 的经典示例，能让 Claude 用类比 + ASCII 图 + 逐步讲解的方式解释代码，非常适合 Code Review 或团队分享时使用。
 * `Figma` / `Notion` / `Atlassian` Skills
-官方 Skills 目录中有来自 `Figma`、`Notion`、`Atlassian` 等平台的合作 skill，配合对应的 MCP 连接器使用，能实现跨工具的自动化工作流。Figma 侧 MCP 的安装与验证步骤见本文 **「四、MCP」** 与 **「四、Demo 实战 → 4.3」**。
+官方 Skills 目录中有来自 `Figma`、`Notion`、`Atlassian` 等平台的合作 skill，配合对应的 MCP 连接器使用，能实现跨工具的自动化工作流。Figma 侧 MCP 的安装与验证步骤见本文 **「四、MCP」** 与 **「六、Demo 实战 → 6.3」**。
 
 ### 3.7 自定义 Skill 示例：Vue 文件隐患检查（`vue-bug-guard`）
 
 团队可以自建 Skill，把「Code Review 时容易漏掉的 Vue 坑」固化成可重复执行的工作流。下面示例聚焦：**在 `.vue` / `setup` 代码中提前发现一类「运行时或边界条件下才暴露」的问题**，例如访问了不存在的字段、缺少判空与兜底、异步与响应式误用等。
 
-#### 作用与价值
+#### 3.7.1 作用与价值
 
 - **统一审查口径**：不依赖个人经验，Claude 按 SKILL 中的清单逐项扫描，减少漏检。
 - **与业务解耦**：规则写在 `SKILL.md` 里，可按项目迭代（如 Pinia 模块命名、接口字段变更）随时调整。
 - **低成本触发**：仅在用户提到「检查 Vue」「Review 这个组件」「看有没有空指针风险」等场景加载完整指令，节省 token。
 
-#### 建议覆盖的检查维度（可按项目裁剪）
+#### 3.7.2 建议覆盖的检查维度（可按项目裁剪）
 
 | 类别 | 典型问题 | 说明 |
 |------|----------|------|
@@ -304,7 +337,7 @@ echo "[Claude Code] 若本次改动了 Vue：建议在对话中执行「按 vue-
 | **模板与指令** | `v-html` 安全风险、`v-if` / `v-show` 混用导致状态不一致 | 按团队规范给出风险等级 |
 | **与 TS 配合** | `any` 绕过类型检查、可选链与类型断言矛盾 | 提示收紧类型或运行时校验 |
 
-#### 目录结构示例
+#### 3.7.3 目录结构示例
 
 ```
 .claude/skills/vue-bug-guard/
@@ -313,7 +346,7 @@ echo "[Claude Code] 若本次改动了 Vue：建议在对话中执行「按 vue-
         └── checklist.md   # 可选：更长的检查表或项目专有名词表
 ```
 
-#### `SKILL.md` 示例（可直接复制后按项目修改）
+#### 3.7.4 `SKILL.md` 示例（可直接复制后按项目修改）
 
 ```markdown
 ---
@@ -345,7 +378,7 @@ description: 审查 Vue 单文件组件与 Composition API 中常见的运行时
 - 若用户仅要求「快速扫一眼」，可只输出摘要 + 高优先级问题。
 ```
 
-#### 使用与调试建议
+#### 3.7.5 使用与调试建议
 
 - **怎么触发、怎么做到「结束提醒」**：见上文 **「3.5 Skill 使用」**（对话、`CLAUDE.md`、Hooks、`SessionEnd` 提醒与 ESLint 分工）。
 - **调优**：把团队真实踩坑案例（如某次线上 `undefined` 字段）追加到 `SKILL.md` 的「必须检查的项」或 `resources/checklist.md`，Skill 会越用越贴合仓库。
@@ -399,9 +432,9 @@ graph TB
 
 ---
 
-## 三、Claude Code vs OpenAI Codex 深度对比
+## 五、Claude Code vs OpenAI Codex 深度对比
 
-### 3.1 全维度对比矩阵
+### 5.1 全维度对比矩阵
 
 | 对比维度 | OpenAI Codex / Copilot | Claude Code |
 |---------|----------------------|-------------|
@@ -417,7 +450,7 @@ graph TB
 | **隐私保护** | 数据用于训练（默认） | **可配置，企业版不训练** |
 | **中文理解** | 一般 | **优秀，中文需求描述无歧义** |
 
-### 3.2 优势与局限
+### 5.2 优势与局限
 
 | Claude Code 优势 | Claude Code 局限 |
 |-----------------|-----------------|
@@ -428,7 +461,7 @@ graph TB
 | 宪法 AI 安全设计，企业级可信 | 新手学习曲线：Prompt 工程要求 |
 | 自动修复闭环，减少人工干预 | |
 
-### 3.3 为什么选择 Claude Code？
+### 5.3 为什么选择 Claude Code？
 
 **对于前端/全栈团队，Claude Code 的选择逻辑：**
 
@@ -439,15 +472,15 @@ graph TB
 
 ---
 
-## 四、Demo 实战
+## 六、Demo 实战
 
 
-### 4.1 下载项目&skills
+### 6.1 下载项目&skills
 下载项目 https://github.com/LeonardoDAna/ai_tech_share.git
 
 新建&切换分支 `git checkout -b demo`
 
-### 4.2 提出需求
+### 6.2 提出需求
 > plan mode on 模式下
 
 1. **需求描述**
@@ -472,11 +505,11 @@ graph TB
 
 5. **提交代码**
 
-### 4.3 Demo：完成 Figma MCP 安装与验证
+### 6.3 Demo：完成 Figma MCP 安装与验证
 
-Figma 提供 **远程 MCP（推荐）** 与 **桌面 MCP（备选）** 两种形态；下面以官方推荐的远程方式为例，演示在 Claude Code 中「完成下载 / 安装插件并可用」的完整路径。更细的说明见 [Figma Help：Remote MCP server](https://help.figma.com/hc/en-us/articles/35281350665623-Figma-MCP-collection-How-to-set-up-the-Figma-remote-MCP-server-preferred)。
+Figma 提供 **远程 MCP（推荐）** 与 **桌面 MCP（备选）** 两种形态；下面以官方推荐的远程方式为例，演示在 Claude Code 中「完成下载 / 安装插件并可用」的完整路径。更细的说明见 [Figma Help：Remote MCP server](https://help.figma.com/hc/en-us/articles/35281350665623-Figma-MCP-collection-How-to-set-up-the-Figma-remote-MCP-server-preferred）。
 
-#### 步骤 1：安装官方 Figma 插件（市场源）
+#### 6.3.1 步骤 1：安装官方 Figma 插件（市场源）
 
 在终端执行（需已安装全局 `claude-code` 并可正常 `claude` 启动）：
 
@@ -486,29 +519,31 @@ claude plugin install figma@claude-plugins-official
 
 安装过程会从官方插件市场拉取 **Figma MCP 相关包**，即完成「下载 / 安装」主体；若网络较慢，可多试几次或检查代理。
 
-#### 步骤 2：重启 Claude Code
+#### 6.3.2 步骤 2：重启 Claude Code
 
 完全退出当前 `claude` 会话后重新进入项目目录执行 `claude`，确保新插件被加载。
 
-#### 步骤 3：授权 Figma
+#### 6.3.3 步骤 3：授权 Figma
 
 1. 在 Claude Code 中输入 `/plugin`（或打开插件管理界面，以你当前版本为准）。
 2. 在「已安装」中找到 **figma**，按提示跳转浏览器完成 **Figma 账号 OAuth 授权**。
 3. 授权成功后，MCP 工具才会在会话中可用。
 
-#### 步骤 4：验证是否接通
+#### 6.3.4 步骤 4：验证是否接通
 
 1. 在 Figma 中打开设计文件，选中某个 Frame 或图层，使用 **Copy link to selection** 复制链接。
 2. 在 Claude Code 里发送需求，例如：「根据以下 Figma 链接，说明布局结构并给出 Vue 组件拆分建议：[粘贴链接]」。
 3. 若模型能够拉取设计上下文（尺寸、结构、Dev Mode 相关信息等），即表示 **Figma MCP 已正确安装并完成授权**。
 
-#### 备选：桌面 MCP（本机 Figma 应用）
+#### 6.3.5 备选：桌面 MCP（本机 Figma 应用）
 
 若需使用本机 Figma 桌面版暴露的 MCP：在桌面端打开文件并进入 **Dev Mode**，在侧栏启用 MCP Server，将给出的本地地址（通常为 `http://127.0.0.1:3845/mcp`）按 Claude Code 文档配置为 HTTP MCP；具体见 [Figma Help：Desktop MCP server](https://help.figma.com/hc/en-us/articles/35281186390679-Figma-MCP-collection-How-to-setup-the-Figma-desktop-MCP-server-alternative)。
 
 ---
 
-### 6.2 Prompt 最佳实践
+## 七、实践与规范
+
+### 7.1 Prompt 最佳实践
 
 #### ✅ 好的 Prompt 模板
 
@@ -528,7 +563,7 @@ claude plugin install figma@claude-plugins-official
 【错误示例】"帮我写一个列表页" —— 信息缺失，Claude 会做大量假设，结果偏差大
 ```
 
-### 6.3 团队协作规范建议
+### 7.2 团队协作规范建议
 
 - 建立 `CLAUDE.md` 项目上下文文件，记录技术栈、代码规范、常用模式
 - 复杂任务先让 Claude 输出"执行计划"，确认后再执行
@@ -536,7 +571,7 @@ claude plugin install figma@claude-plugins-official
 - 框架升级使用"灰度迁移"策略，逐模块迁移，每步验证
 - 建立 Prompt 模板库，沉淀团队高频场景的最佳提示词
 
-### 6.4 注意事项
+### 7.3 注意事项
 
 - **安全红线**：绝对不要将密钥、数据库密码等敏感信息粘贴到 Prompt 中
 - **知识产权**：AI 生成代码需人工 Review，确保合规性和准确性
@@ -545,9 +580,9 @@ claude plugin install figma@claude-plugins-official
 
 ---
 
-## 七、总结与展望
+## 八、总结与展望
 
-### 7.1 核心价值总结
+### 8.1 核心价值总结
 
 **Claude Code 不是"更聪明的自动补全"，而是一个真正的 AI 编程协作者：**
 
@@ -556,7 +591,7 @@ claude plugin install figma@claude-plugins-official
 - 在新项目开发和老项目升级两个场景都有显著的效率提升
 - 团队工程师的角色从"代码生产者"升级为"需求架构师 + AI 协调者"
 
-### 7.2 适合使用的场景
+### 8.2 适合使用的场景
 
 - 需要快速原型验证的新项目
 - 技术债务较重、需要系统性重构的老项目
@@ -564,7 +599,7 @@ claude plugin install figma@claude-plugins-official
 - 框架/依赖版本升级迁移
 - 编写单元测试、文档、Code Review
 
-### 7.3 团队落地建议
+### 8.3 团队落地建议
 
 1. 从低风险项目开始试点，建立信心和经验
 2. 制定 Prompt 规范和模板库，降低使用门槛
