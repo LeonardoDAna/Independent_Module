@@ -407,6 +407,7 @@ description: 审查 Vue 单文件组件与 Composition API 中常见的运行时
 配置完成后，模型会在需要时 **列出工具（list tools）→ 调用工具 → 把结果写回对话**，你只需用自然语言描述任务并粘贴链接或上下文即可。
 
 ### 4.3 MCP 结构示意
+- MCP（Model Context Protocol，模型上下文协议）是 Claude Code 实现外部工具扩展的核心开放协议，用于打通 AI 模型与第三方服务 / 系统的通信链路。
 ```mermaid
 graph TB
     A["Claude"]
@@ -427,12 +428,33 @@ graph TB
     style B fill:#f3e5f5,stroke:#333,color:#333
     style C fill:#e8f5e9,stroke:#333,color:#333
 ```
-
+#### MCP 架构详细解释
+核心组件定义
+Claude：AI 核心模型，负责理解用户需求、生成指令、处理返回数据，是整个交互的决策中心；
+MCP Server：协议中间层 / 服务代理，核心作用是翻译和转发，将 Claude 的指令转换为外部服务可识别的格式，同时将外部数据标准化后返回给 Claude；
+External Service：外部第三方服务（如 GitHub、Jira、Figma、数据库、云平台等），提供实际的数据和业务能力。
+数据交互流程（两种核心场景）
+查询场景（读取数据）
+Claude 向 MCP Server 发送查询请求（如：查询项目问题列表 list_issues）；
+MCP Server 对接外部服务，执行数据查询；
+外部服务返回原始数据；
+MCP Server 格式化数据后响应给 Claude。
+操作场景（写入 / 执行动作）
+Claude 向 MCP Server 发送操作请求（如：创建工单 create_issue）；
+MCP Server 调用外部服务接口执行动作；
+外部服务返回执行结果；
+MCP Server 将结果反馈给 Claude。
+MCP 核心价值
+解耦 AI 模型与外部系统，无需修改模型即可扩展任意工具；
+标准化通信协议，支持所有第三方服务接入；
+安全隔离：通过 MCP 控制权限，避免 AI 直接访问敏感系统；
+是 Claude Code 实现跨工具自动化、Agent 能力的核心底座。
 > **提示**：首次使用某 MCP 时，终端或界面通常会引导你完成登录 / OAuth；仅授权你信任的连接器，并注意文件与仓库的访问范围。
 
 ---
 
-## 五、Claude Code vs OpenAI Codex 深度对比
+## 五、plugin 
+- **plugin** 是 Claude Code 的能力中枢，通过 Skills + MCP + Hooks 等功能实现插件化扩展，让 AI 拥有可执行、可调试、可工程化的专业开发能力。
 
 ### 5.1 全维度对比矩阵
 
@@ -474,6 +496,12 @@ graph TB
 
 ## 六、Demo 实战
 
+## 前置工作
+ 1. 生成claude.md
+ 2. 配置plugin
+ 3. 配置skills
+ 4. 配置MCP
+ 5. 配置hooks
 
 ### 6.1 下载项目&skills
 下载项目 https://github.com/LeonardoDAna/ai_tech_share.git
@@ -539,7 +567,10 @@ claude plugin install figma@claude-plugins-official
 
 若需使用本机 Figma 桌面版暴露的 MCP：在桌面端打开文件并进入 **Dev Mode**，在侧栏启用 MCP Server，将给出的本地地址（通常为 `http://127.0.0.1:3845/mcp`）按 Claude Code 文档配置为 HTTP MCP；具体见 [Figma Help：Desktop MCP server](https://help.figma.com/hc/en-us/articles/35281186390679-Figma-MCP-collection-How-to-setup-the-Figma-desktop-MCP-server-alternative)。
 
----
+
+### 上下文处理
+--- 压缩上下文 
+--- 清除上下文
 
 ## 七、实践与规范
 
