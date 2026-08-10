@@ -2,13 +2,13 @@
 
 # Claude Code 分享与实际应用
 !!! danger 
-注意：本次分享使用的 **claude code** 版本为 **V2.1.94** 
+注意：本次分享使用的 **claude code** 版本为 **V2.1.94** ， **Nodejs**版本需要在 **18.0.0** 以上。
 !!!
 ## 一、Claude Code 的来源与发展历史
 
 ### 1.1 Anthropic 公司背景
 
-Anthropic 由 **Dario Amodei**、**Daniela Amodei** 等前 OpenAI 核心研究人员于 2021 年创立，公司核心理念是：
+Anthropic 由 前 OpenAI 核心研究人员于 2021 年创立，公司核心理念是：
 
 - 构建强大且可被人类理解和控制的 AI 系统
 - 以"宪法 AI"（Constitutional AI）方法论驯化大模型行为
@@ -59,6 +59,9 @@ Anthropic 由 **Dario Amodei**、**Daniela Amodei** 等前 OpenAI 核心研究�
   .timeline-wrap p.competitor strong {
     color: #BDBDBD;
   }
+  .timeline-wrap p.point strong {
+    color: #FF0000;
+  }
 </style>
 <div class="timeline-wrap">
   <p><strong>2021 年</strong> — Anthropic 由前 OpenAI 核心成员创立，专注安全可靠的 AI 研究</p>
@@ -68,31 +71,27 @@ Anthropic 由 **Dario Amodei**、**Daniela Amodei** 等前 OpenAI 核心研究�
   <p><strong>2024 年 9 月</strong> — Boris Cherny（TypeScript 书籍作者）加入 Anthropic，开始原型化开发者工具</p>
   <p><strong>2024 年 10 月</strong> — Claude Code 内测，专为软件开发场景打造的 Agentic AI 工具链</p>
   <p><strong>2024 年 11 月</strong> — MCP（Model Context Protocol）开放标准发布，为工具扩展能力奠定基础</p>
-  <p><strong>2025 年 2 月</strong> — Claude Code 研究预览版正式上线，随 Claude 3.7 Sonnet 同步发布，支持终端调用、MCP 协议、复杂多步任务</p>
+  <p class="point"><strong>2025 年 2 月</strong> — Claude Code 研究预览版正式上线，随 Claude 3.7 Sonnet 同步发布，支持终端调用、MCP 协议、复杂多步任务</p>
   <p class="competitor"><strong>2025 年 4 月</strong> — OpenAI 发布 Codex CLI，行业跟进终端 Agent 架构</p>
   <p><strong>2025 年 5 月</strong> — Claude 4（Sonnet 4 / Opus 4）发布，Claude Code 正式 GA，新增代码执行、Files API，成为业界标杆</p>
   <p class="competitor"><strong>2025 年 6 月</strong> — Google 发布 Gemini CLI，终端 AI 编程工具成为行业主流范式</p>
   <p><strong>2025 年 11 月</strong> — Claude Opus 4.5 发布，价格下降 67%，重夺编程基准测试榜首</p>
-<p><strong>2026 年 1 月</strong> — Claude Code 企业版正式落地，支持私有 Git 仓库对接、本地部署与团队权限管理</p>
-<p><strong>2026 年 2 月</strong> — NASA 公开 Claude Code 成功用于火星探测器路线规划（任务执行于2025年12月，官方公布于2026年2月）</p>
-<p><strong>2026 年 2 月</strong> — Claude Opus 4.6 / Sonnet 4.6 发布，Claude Code 同步上线 Agent Teams、Rewind、自动记忆等核心能力</p>
-<p><strong>2026 年 3 月</strong> — Claude Code 密集迭代，上线语音模式、Computer Use、远程控制、1M token 上下文、Auto 模式，全面进入 Agent 时代</p>
-<p><strong>2026 年 3 月</strong> — Claude 最新模型正式接入 Microsoft 365 Copilot，面向企业级市场全面开放</p>
-<p><strong>2026 年 4 月</strong> — Claude Opus 4.7 发布</p>
-<p><strong>未来？</strong> — 新模型Capybara, mythos, and Sonnet 4.8</p>
-</div>
+  <p><strong>2026 年 1 月</strong> — Claude Code 企业版正式落地，支持私有 Git 仓库对接、本地部署与团队权限管理</p>
+  <p class="point"><strong>2026 年 2 月</strong> — NASA 公开 Claude Code 成功用于火星探测器路线规划（任务执行于2025年12月，官方公布于2026年2月）</p>
+  <p class="point"><strong>2026 年 2 月</strong> — Claude Opus 4.6 / Sonnet 4.6 发布，Claude Code 同步上线 Agent Teams、Rewind、自动记忆等核心能力</p>
+  <p><strong>2026 年 3 月</strong> — Claude Code 密集迭代，上线语音模式、Computer Use、远程控制、1M token 上下文、Auto 模式，全面进入 Agent 时代</p>
+  <p><strong>2026 年 3 月</strong> — Claude 最新模型正式接入 Microsoft 365 Copilot，面向企业级市场全面开放</p>
+  <p class="point"><strong>2026 年 4 月</strong> —  发生了Claude Code源码泄露的事故，同月Claude Opus 4.7 发布（4 月 16 日 GA）：在高难度软件工程、高分辨率视觉与长程任务可靠性上较 Opus 4.6 明显提升；针对高风险网络安全场景引入自动拦截，并开放 Cyber Verification Program 供合规安全研究使用</p>  
+  <p class="point"><strong>未来</strong> — 官方已披露受限发布的 <strong>Claude Mythos Preview</strong>（Anthropic 自述能力强于广泛可用的 Opus 4.7，与「Mythos 类模型」渐进开放路线相关）。网传内部层级代号「Capybara」与 <strong>Sonnet 4.8</strong> 等尚未有与 Opus 4.7 同级的产品级官宣，宜以 <a href="https://www.anthropic.com/news" rel="noopener noreferrer">Anthropic 新闻</a> 与 API 发布说明为准</p></div>
 
 >  从「实验性副项目」到「行业标杆」，Claude Code 只用了不到一年时间。
 ### 1.3 Claude Code 诞生的背景
 
-传统 AI 编程助手（如 GitHub Copilot）的核心模式是"补全"——你写代码，AI 给建议。
+**补全型**工具（如 Copilot）在你敲代码时给片段；**Claude Code** 按目标推进整段工作：在仓库里读改、检索、跑命令，并用 **MCP** 接外部工具，在全局上下文中交付可合并结果。
 
-Claude Code 从根本上改变了这一范式：
-
-- **从"代码补全"进化到"任务执行"**：你描述需求，AI 完整实现
-- **具备真正的 Agentic 能力**：可以读文件、搜索代码库、执行命令、自我纠错
-- **深度理解大型工程代码库上下文**：不是单文件补全，而是全局架构感知
-- **支持 MCP（Model Context Protocol）协议**：可扩展对接任意外部工具
+- **任务级交付**：从一句话需求到完整改动，而非零散补全
+- **Agent 流程**：多步执行、工具调用与自检纠错
+- **仓库级上下文**：跨文件、懂结构，而不是只看当前文件
 
 ---
 
@@ -120,9 +119,15 @@ curl -fsSL https://claude.ai/install.sh | bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-### 2.2 登录方式
+!!! danger 
+注意：当你使用claude官方提供的安装命令时，请确保做好网络代理。
+!!!
+
+### 2.2 🐯登录方式
 
 claude code 一共有三种登录方式：
+
+
 ```
     # 通过浏览器登录 Claude.ai 账号
     1. Claude account with subscription · Pro, Max, Team, or Enterprise
@@ -158,7 +163,7 @@ claude code 一共有三种登录方式：
 └─ Anthropic Console
 ```
  
-### 2.3 权限模式
+### 2.3 🐯 权限模式
 
 Claude Code 通过 **权限模式（permission mode）** 控制：在编辑文件、执行 Shell、发起网络请求等可能改变环境的行为之前，是否暂停并请你确认。模式只通过 **CLI 状态栏 / VS Code 底部指示器 / 设置项** 切换，**不能**靠对话里「说一句切换模式」生效。
 
@@ -196,17 +201,144 @@ Claude Code 通过 **权限模式（permission mode）** 控制：在编辑文�
 | 启动参数 | 如 `claude --permission-mode plan` |
 | 配置文件 | 在 `settings` 中设置 `permissions.defaultMode`（如 `"acceptEdits"`）作为默认 |
 
+### 2.4 🐯示例
+
+> plan mode on 模式下
+
+1. **需求描述**
+```bash
+    帮我实现一个待办列表功能，要求实现以下功能：
+    - 增、删、改、查待办事项
+    - 模糊查询搜索待办事项
+    - 待办事项的状态有进行中、已完成、已取消三种状态
+```
+
+2. **添加需求描述** 
+```bash
+   - 给待办事项增加三种级别：高、中、低。
+```
+3. **运行项目**
+   - 切换至bash模式 
+   - 运行项目 npm run dev 
+
+### 2.5 🐯简单的命令介绍
+
+> 后面会在具体的章节中使用到这些命令，所以我们在这里先做一个简单的介绍。
+
+```bash
+# 模型配置
+/model 
+
+# 模型使用状态
+/status
+
+# 花费成本
+/cost
+
+# 获取历史对话 
+/resume
+
+# 压缩上下文 
+/compact
+
+# 清除当前对话
+/clear
+
+# 获取技能
+/skills
+
+# 获取代理 subagent
+/agent
+
+# 获取插件
+/plugins 
+
+# 查看hooks
+/hooks
+```
+
+### 2.6 🐯claude.md (/memory)
+
+Claude Code 启动时会**自动读一份 Markdown**，把里面的内容当成**默认常识**注入每次对话。你可以在会话里输入 `/memory` 直接打开编辑，也可以一句话前加 `#` 让 Claude 帮你追加一条记忆。
+
+claude.md 就像你给实习生的项目笔记，让他快速了解项目的结构和团队里的代码风格，并**自动记住**。
+
+**解决什么问题**
+
+- 🐯切换不同的项目的时候不需要重新获取之前的对话记录，防止丢失项目的前置提示词。
+- 每次都要重复交代：「我们用 Vue3 + TS、请用 pnpm、别用 any」。
+- 新成员一上来不知道项目规范，Claude 也不知道。
+- 同一个错反复犯，提醒一次下一轮又忘。
+- 把上面这些写进 memory，一次写、每次生效。
+
+### 2.7 🐯claude.md 实例
+
+```md
+# 项目概况
+
+TypeScript monorepo，npm workspace，Node 18。
+
+# 核心约定
+
+- 全部使用TypeScript严格模式
+- 错误处理统一用 Result<T, E> 模式，不要抛异常。
+
+# 测试
+
+框架：Vitest。执行命令：pnpm test
+测试文件与源码同目录：foo.ts → foo.test.ts
+mock外部服务，测试中禁止调用真实API
+
+# 常见错误（重要）
+
+- 不要用 any 类型。用 unknown + 类型守卫
+- 不要用 try/catch 处理业务错误。用 Result<T, E>
+- 不要新建文件之前不检查是否已有类似功能
+- 不要使用var来声明变量
+```
+
+**两个级别（最常用）**
+
+| 级别 | 路径 | 谁能看到 | 写什么 |
+|------|------|---------|--------|
+| **项目级** | `./CLAUDE.md`（跟仓库走） | 所有同事 | 技术栈、目录约定、提交信息风格、禁忌事项、团队术语 |
+| **个人级** | `~/.claude/CLAUDE.md`（全局） | 只有你 | 语言偏好、沟通风格、个人快捷规则、跨项目的个人习惯 |
+
+> 额外还有 `.claude/CLAUDE.local.md`（**本地、不提交**）：放只属于本机的路径、调试开关等。
+
+**加载顺序**：个人级 → 项目级 → 本地级，后者可**覆盖**前者。
+
+**怎么用，三句话**
+
+1. 打开：会话里输入 `/memory`，选一个级别开始编辑。
+2. 追加：聊天里打 `# 我们项目用 pnpm，不要出现 npm install`，这行就会被写进对应的 `CLAUDE.md`。
+3. 看一眼：启动会话时 Claude Code 会提示已加载的 memory 文件路径，心里有数。
+
+**写什么（建议短清单，别当 wiki 用）**
+
+- 技术栈 & 版本
+- 目录与命名规范
+- 代码风格红线（如：不用 `any`、不用 `var`）
+- 提交信息 / PR 模板
+- 项目专有名词、缩写
+
+**不建议放什么**
+
+- 大段业务文档 / 教程 → 丢失重点、每轮都烧 token。
+- 「每次必须跑的步骤」 → 放 **Skill** 或 **Hook** 更靠谱（见 3.5 / 3.7）。
+- 密钥 / 口令 → **绝对不要**，会随仓库泄漏。
+
 ## 三、Claude Code 核心能力 - Skills
 
-### 3.1 什么是 Skills？
+### 3.1 🐯 什么是 Skills？
 **Skills** 是将你的专业知识打包成可组合资源的模块，能把通用 AI 助手转变为针对特定领域的专家。本质上就是一个包含 SKILL.md 文件的文件夹，里面放着 Claude 执行特定任务所需的指令、脚本和资源。
 Skills 就像「可执行的专业知识」——它们是结构化的、可强制执行的工作流，能引导 Claude 以严谨的方式完成复杂任务，避免 AI 急于写代码而跳过必要的检查步骤。
 
-### 3.2 Skill 核心优势
+### 3.2 🐯Skill 核心优势
 
 Skills 极大地减少了 token 消耗。每个 skill 在扫描时只占用约 100 个 token（仅读取 name + description），只有在真正触发时才加载完整内容（约 5000 token）。这意味着你可以同时挂载多个 skill，而不会撑爆上下文窗口。
 
-### 3.3 Skill 文件结构
+### 3.3 🐯Skill 文件结构
 每个 skill 的基本结构如下：
 
 ```
@@ -246,6 +378,13 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
     .claude/skills/your-skill/SKILL.md
 ```
 
+### 3.4.1 🐯实例
+  **使用Skills** 
+  ```bash
+  /fronted-design 重新修改页面样式
+  /compact 压缩上下文
+  ```
+
 ### 3.5 Skill 使用（调用 / 调试 / 禁用）
 
 **先理清机制**：Skill 是写进 `SKILL.md` 的「知识与步骤」，交给模型在对话里执行；它**不是**后台常驻进程，也不会像 ESLint 保存即跑那样在无对话时自动完成审查。因此：**「怎么用」= 如何触发模型按这份 Skill 做事**；**「开发完提醒我」= 用项目规则或 Hooks 做提醒/门禁**，二者常组合使用。
@@ -261,26 +400,28 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
 
 **不要指望的**：单独靠 Skill 自己在「你写代码时」无感运行——那需要下面 **Hooks 或外部脚本**。
 
-#### 3.5.2 Hooks 能做什么？和 Skill 什么关系？
+#### 3.5.2 🐯Hooks
+
+hooks 可以让用户在工具使用前后等时机执行一段自己的逻辑，列如可以让它给你做代码格式化。
 
 [Hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) 是在 Claude Code **生命周期**里执行的一段 **Shell / HTTP / Prompt**（配置在 `~/.claude/settings.json` 或项目 `.claude/settings.json`，也可用 `/hooks` 管理）。它是**确定性**的：到点就执行。
 
-- **Hooks 不能替你在后台「调用 Skill」**：Skill 的审查逻辑在模型侧；Hook 可以跑 `eslint`、`vue-tsc`、打印提醒文案等。
-- **想和「开发完提醒」结合**：可用 `SessionEnd`（会话结束）或 `Stop`（每轮回复结束）挂一个轻量命令，**打印固定提醒**，提示你在下一轮对话里执行 vue-bug-guard；若挂在 `Stop` 上，提醒会很频繁，一般更推荐 **`SessionEnd`** 或依赖 **CLAUDE.md**。
+- **Hook 的真正价值**：**到点就跑、不依赖模型记性**。最典型的用法是在文件被写入 / 编辑后，自动跑一套**纯脚本校验**（ESLint / Prettier / vue-tsc），失败的信息会写回对话，模型下一轮就能看到并尝试修复。
 
-**示例：`SessionEnd` 时打印一句提醒（需本机可执行 `bash` 或改为 PowerShell 脚本）**
+**示例：`PostToolUse` 匹配 `Write|Edit` → 自动 ESLint / Prettier / vue-tsc**
 
-项目 `.claude/settings.json` 片段（具体字段以你安装的 Claude Code 版本为准，详见官方 Hooks 文档）：
+项目 `.claude/settings.json` 片段（字段以你当前 Claude Code 版本的 [Hooks 文档](https://docs.anthropic.com/en/docs/claude-code/hooks) 为准）：
 
 ```json
 {
   "hooks": {
-    "SessionEnd": [
+    "PostToolUse": [
       {
+        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/remind-vue-bug-guard.sh"
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-on-edit.sh"
           }
         ]
       }
@@ -289,21 +430,11 @@ description: 解释代码结构，使用类比和图示。当用户问"这段代
 }
 ```
 
-`.claude/hooks/remind-vue-bug-guard.sh` 示例：
-
-```bash
-#!/usr/bin/env bash
-echo ""
-echo "[Claude Code] 若本次改动了 Vue：建议在对话中执行「按 vue-bug-guard 检查本次修改的 .vue 文件」。"
-```
-
-> 若团队要**硬门禁**，更常见的是 `PostToolUse` + 匹配 `Edit|Write` 跑 `pnpm exec eslint …` / `vue-tsc --noEmit`，与 Skill 互补：脚本拦语法与类型，Skill 做深一点的逻辑与边界审查。
-
 #### 3.5.3 小结：怎么选？
 
-- **每次生成代码时都要查一遍**：不必单独「命令」；在 **CLAUDE.md** 里写死流程，或养成在收尾时发一句「按 vue-bug-guard 检查…」。
-- **希望「开发完提醒到我」**：用 **`SessionEnd` Hook** 打印提醒，或 **`CLAUDE.md` 约定**；不要指望 Skill 自己弹系统通知。
-- **要完全自动、不依赖模型**：用 **ESLint / `vue-tsc` / CI**，Hooks 里调用它们；Skill 负责模型可读、可解释的补充审查。
+- **模型可理解的规则 / 清单**：写 **Skill**，让模型按步骤做。
+- **到点自动执行、不靠模型记性**：写 **Hook**，直接调脚本 / 工具。
+- **典型组合**：Hook 做硬门禁（语法、类型、格式），Skill 做启发式审查（命名、语义、边界），CLAUDE.md 写下「完成功能后按 xxx 清单 Review」的约定，三者互补。
 
 ### 3.6 官方推荐 Skill 详解
 * `frontend-design` — 高质量 UI 生成
@@ -312,14 +443,12 @@ echo "[Claude Code] 若本次改动了 Vue：建议在对话中执行「按 vue-
 这三个是 Anthropic 官方维护的内置 skill，分别用于创建和编辑 Word 文档、Excel 表格和 PPT 演示文稿，支持样式、公式、追踪修改等高级功能。
 * `pdf` — PDF 处理
 完整的 PDF 工具链，支持文本提取、表格解析、创建新 PDF、合并/拆分文档、处理表单等操作。
-* `explain-code` — 代码讲解
-自定义 skill 的经典示例，能让 Claude 用类比 + ASCII 图 + 逐步讲解的方式解释代码，非常适合 Code Review 或团队分享时使用。
 * `Figma` / `Notion` / `Atlassian` Skills
-官方 Skills 目录中有来自 `Figma`、`Notion`、`Atlassian` 等平台的合作 skill，配合对应的 MCP 连接器使用，能实现跨工具的自动化工作流。Figma 侧 MCP 的安装与验证步骤见本文 **「四、MCP」** 与 **「六、Demo 实战 → 6.3」**。
+官方 Skills 目录中有来自 `Figma`、`Notion`、`Atlassian` 等平台的合作 skill，配合对应的 MCP 连接器使用，能实现跨工具的自动化工作流。Figma 侧 MCP 的安装与验证步骤见本文 **「四、MCP」** 与 **「六、Demo 实战 → 6.4」**。
 
-### 3.7 自定义 Subagent 示例：JS / CSS 声明检查（`decl-guard`）
+### 3.7 自定义 Subagent 示例：JS / CSS 声明检查
 
-与 3.5 的 Skill 不同，**Subagent** 是**主对话之外**的独立会话——这里我们用一个最朴素但完全可用的实现：**在主对话里手动派发一个 `claude -p` 无头（headless）子进程**，对指定文件做 **JS 变量声明 + CSS 类目声明** 的简单检查，结果落到日志或直接打印，**不打断当前对话**，也**不污染主上下文**。本节与 **「3.8 Agent Skills 与 Subagent 对比」** 中给出的定义一一对应。
+与 3.5 的 Skill 不同，**Subagent** 是**主对话之外**的独立会话——这里我们用一个最朴素但完全可用的实现：**在主对话里手动派发一个无头（headless）子进程**，对指定文件做 **JS 变量声明 + CSS 类目声明** 的简单检查，结果落到日志或直接打印，**不打断当前对话**，也**不污染主上下文**。
 
 #### 3.7.1 作用与价值
 
@@ -328,40 +457,18 @@ echo "[Claude Code] 若本次改动了 Vue：建议在对话中执行「按 vue-
 - **可后台并行**：以后台方式启动子进程，可并行多个文件互不干扰。
 - **范围聚焦**：只检查**指定的那个文件**，避免每次扫全仓库的成本。
 
-#### 3.7.2 检查维度（简单版，可逐步扩展）
-
-| 类别 | 典型问题 | 说明 |
-|------|----------|------|
-| **JS / TS — `var` 用法** | 出现 `var foo = ...` | 建议改 `let` / `const` |
-| **JS / TS — 可降级 `const`** | `let` 但作用域内未被重新赋值 | 建议改 `const` |
-| **JS / TS — 隐式全局** | 未声明便赋值，如 `foo = 1` | 建议显式声明 |
-| **JS / TS — 重复声明** | 同作用域内 `let` / `const` 同名重复 | 重命名或合并 |
-| **CSS — 同选择器重复定义** | 同一 `.btn` 在文件内多处定义 | 合并或拆样式 |
-| **CSS — 空规则** | `.foo { }` | 删除或补内容 |
-| **CSS — 命名风格混用** | 同文件混用 `kebab-case` / `camelCase` | 统一规范 |
-| **CSS — 疑似未使用类** | 与同目录 `.vue` / `.html` / `.jsx` 引用粗匹配后无命中 | 标注「待确认」（不直接删） |
-
-#### 3.7.3 目录结构
+#### 3.7.2 目录结构
 
 ```
 .claude/
-├── subagents/
-│   └── decl-guard.md       # 子代理 prompt（独立会话使用）
+├── agents/
+│   └── code-reviewer.md       # 子代理 prompt（独立会话使用）
 └── logs/
-    └── decl-guard-*.md     # 子代理报告（手动 / 脚本输出，可选）
+    └── code-reviewer-*.md     # 子代理报告（手动 / 脚本输出，可选）
 ```
 
-#### 3.7.4 数据流
 
-```mermaid
-flowchart LR
-    User["User in main session"] --> Claude["Claude main agent"]
-    Claude -->|"spawn claude -p"| Sub["Headless subagent"]
-    Sub -->|read only| File["foo.js / foo.css"]
-    Sub -->|markdown report| Out["stdout / .claude/logs/*.md"]
-```
-
-#### 3.7.5 Subagent prompt
+#### 3.7.3 🐯Subagent prompt
 
 ```markdown
 ---
@@ -394,53 +501,13 @@ color: green
 如果代码完全符合上述三条规范，请回复：“✅ 检查完毕，代码符合团队核心规范。”
 ```
 
-#### 3.7.6 派发与使用
 
-**直接在终端派发（前台，立刻看到报告）**
+#### 3.7.4 🐯验证与调试
 
+- **首跑**：先在小文件上跑前台命令，确认输出符合 3.7.3 中规定的「摘要 + 问题表 + 可优先修复」格式。
 ```bash
-claude -p --output-format text \
-  "$(cat .claude/subagents/decl-guard.md)\n\n请只检查以下文件：src/foo.js"
+/agents 给我做下代码审核
 ```
-
-**后台派发（不阻塞当前终端，结果写入日志）**
-
-```bash
-mkdir -p .claude/logs
-LOG=".claude/logs/decl-guard-$(date +%Y%m%d-%H%M%S).md"
-nohup claude -p --output-format text \
-  "$(cat .claude/subagents/decl-guard.md)\n\n请只检查以下文件：src/foo.js" \
-  > "$LOG" 2>&1 &
-echo "[decl-guard] dispatched -> $LOG"
-```
-
-**Windows / PowerShell 等价写法**
-
-```powershell
-$prompt = Get-Content .claude/subagents/decl-guard.md -Raw
-$file   = "src/foo.js"
-$payload = "$prompt`n`n请只检查以下文件：$file"
-
-New-Item -ItemType Directory -Force -Path .claude/logs | Out-Null
-$log = ".claude/logs/decl-guard-{0}.md" -f (Get-Date -Format 'yyyyMMdd-HHmmss')
-
-Start-Process -FilePath "claude" `
-  -ArgumentList @("-p", "--output-format", "text", $payload) `
-  -RedirectStandardOutput $log `
-  -NoNewWindow
-```
-
-#### 3.7.7 验证与调试
-
-- **首跑**：先在小文件上跑前台命令，确认输出符合 3.7.5 中规定的「摘要 + 问题表 + 可优先修复」格式。
-```bash
-给我做下代码审核
-```
-- **看日志**：后台模式下到 `.claude/logs/decl-guard-*.md` 看最新文件。
-- **常见坑**：
-  - `claude` 不在 PATH → 用绝对路径，或在 PowerShell 里用 `Get-Command claude` 定位。
-  - **token 成本**：headless 子进程仍会消耗 token；按需派发即可，不必每次保存都跑。
-- **与 ESLint / Stylelint 分工**：硬规则（语法、未使用变量、重复 key）继续交给 ESLint / Stylelint / `vue-tsc`；本子代理负责**轻量启发式**与**跨文件粗匹配**等脚本不擅长的事，二者互补。
 
 ### 3.8 Agent Skills 与 Subagent 对比
 
@@ -456,15 +523,12 @@ Start-Process -FilePath "claude" `
 | 维度 | Agent Skill | Subagent |
 |------|-------------|----------|
 | **本质** | `SKILL.md` + 资源，模型在主对话里**按步骤执行** | 由父代理通过任务调度（如 Cursor 的 Task / Claude Code 的子任务）**启动的另一会话** |
-| **上下文** | **共享**主会话上下文窗口；命中时加载完整指令 | **独立**上下文窗口，与主会话**隔离** |
+| 🐯**上下文** | **共享**主会话上下文窗口；命中时加载完整指令 | **独立**上下文窗口，与主会话**隔离** |
 | **触发方式** | 用户对话提及 / `description` 匹配 / 在 `CLAUDE.md` 里约定 / Slash 命令 | 父代理**显式派发**（带任务描述与所需返回的信息） |
 | **可执行能力** | 由当前会话已挂载的工具决定（Skills 本身**不**带新工具） | 拥有**自己一套工具与权限**，可只读 / 可写 / 可后台 |
-| **并行与状态** | 串行，跟随主对话节奏 | **可并行**多个；运行期间不可见，结束后**仅返回最终消息** |
 | **失败与重试** | 在主对话里立即可见，可中途修正 | 失败 / 中途状态对父代理不可见，需要**完整重新派发** |
 | **Token 成本** | 扫描期约 100 token，触发后约数千 token | 子会话**自带消耗**，长任务总成本可能更高，但能**省主上下文** |
 | **典型用途** | 代码审查清单、文档模板、领域规范、固定输出格式 | 大范围代码探索、跨多个文件 / 多步实验、独立调研、需要隔离的高风险尝试 |
-| **可见性** | 全过程在主会话中可见，便于教学与协作 | 仅返回结果摘要，过程**对用户不直接可见** |
-| **适合谁来设计** | 团队 / 个人沉淀「方法论」 | 父代理（或工程师）拆任务时使用 |
 
 #### 3.8.3 选型建议
 
@@ -520,7 +584,7 @@ graph TB
     style B fill:#f3e5f5,stroke:#333,color:#333
     style C fill:#e8f5e9,stroke:#333,color:#333
 ```
-#### MCP 架构详细解释
+#### 4.3.1 MCP 架构详细解释
 
 **核心组件**
 
@@ -550,7 +614,7 @@ graph TB
 - **Agent 底座**：Claude Code 的跨工具自动化、多步任务，都依赖 MCP 把「对话」稳定地接到「可执行能力」上。
 > **提示**：首次使用某 MCP 时，终端或界面通常会引导你完成登录 / OAuth；仅授权你信任的连接器，并注意文件与仓库的访问范围。
 
-### MCP 操作演示
+### 4.4 🐯 MCP 操作演示
 
 ```bash
 重新修改todolist的样式并且使用figma的设计图为标准：https://www.figma.com/design/8XqVEpjSNiMaVLIZ0QSwPs/todo-list?node-id=1007-82&t=Ca6fgfRAcYff2Aeo-4
@@ -593,7 +657,7 @@ claude plugin install figma@claude-plugins-official
 
 1. 安装后若文档要求 **重启 Claude Code**，先完全退出再进入项目执行 `claude`。  
 2. 在 `/plugin` 中确认插件状态为已启用，并完成所需登录 / 授权。  
-3. 用一条**明确会触发工具或 Skill** 的短句试跑（例如第四章 Figma 的「粘贴设计链接并让模型描述结构」）。  
+3. 🐯用一条**明确会触发工具或 Skill** 的短句试跑。  
 
 > **提示**：只安装来源可信的插件；企业环境建议统一约定市场源与允许列表，避免个人账号随意挂载高权限 MCP。
 
@@ -606,19 +670,19 @@ claude plugin install figma@claude-plugins-official
 
 ## 六、Demo 实战
 
-## 前置工作
+### 6.1 前置工作
  1. 生成claude.md
  2. 配置plugin
  3. 配置skills
  4. 配置MCP
  5. 配置hooks
 
-### 6.1 下载项目&skills
+### 6.2 下载项目&skills
 下载项目 https://github.com/LeonardoDAna/ai_tech_share.git
 
 新建&切换分支 `git checkout -b demo`
 
-### 6.2 提出需求
+### 6.3 提出需求
 > plan mode on 模式下
 
 1. **需求描述**
@@ -643,11 +707,11 @@ claude plugin install figma@claude-plugins-official
 
 5. **提交代码**
 
-### 6.3 Demo：完成 Figma MCP 安装与验证
+### 6.4 Demo：完成 Figma MCP 安装与验证
 
 Figma 提供 **远程 MCP（推荐）** 与 **桌面 MCP（备选）** 两种形态；下面以官方推荐的远程方式为例，演示在 Claude Code 中「完成下载 / 安装插件并可用」的完整路径。更细的说明见 [Figma Help：Remote MCP server](https://help.figma.com/hc/en-us/articles/35281350665623-Figma-MCP-collection-How-to-set-up-the-Figma-remote-MCP-server-preferred）。
 
-#### 6.3.1 步骤 1：安装官方 Figma 插件（市场源）
+#### 6.4.1 步骤 1：安装官方 Figma 插件（市场源）
 
 在终端执行（需已安装全局 `claude-code` 并可正常 `claude` 启动）：
 
@@ -657,35 +721,35 @@ claude plugin install figma@claude-plugins-official
 
 安装过程会从官方插件市场拉取 **Figma MCP 相关包**，即完成「下载 / 安装」主体；若网络较慢，可多试几次或检查代理。
 
-#### 6.3.2 步骤 2：重启 Claude Code
+#### 6.4.2 步骤 2：重启 Claude Code
 
 完全退出当前 `claude` 会话后重新进入项目目录执行 `claude`，确保新插件被加载。
 
-#### 6.3.3 步骤 3：授权 Figma
+#### 6.4.3 步骤 3：授权 Figma
 
 1. 在 Claude Code 中输入 `/plugin`（或打开插件管理界面，以你当前版本为准）。
 2. 在「已安装」中找到 **figma**，按提示跳转浏览器完成 **Figma 账号 OAuth 授权**。
 3. 授权成功后，MCP 工具才会在会话中可用。
 
-#### 6.3.4 步骤 4：验证是否接通
+#### 6.4.4 步骤 4：验证是否接通
 
 1. 在 Figma 中打开设计文件，选中某个 Frame 或图层，使用 **Copy link to selection** 复制链接。
 2. 在 Claude Code 里发送需求，例如：「根据以下 Figma 链接，说明布局结构并给出 Vue 组件拆分建议：[粘贴链接]」。
 3. 若模型能够拉取设计上下文（尺寸、结构、Dev Mode 相关信息等），即表示 **Figma MCP 已正确安装并完成授权**。
 
-#### 6.3.5 备选：桌面 MCP（本机 Figma 应用）
+#### 6.4.5 备选：桌面 MCP（本机 Figma 应用）
 
 若需使用本机 Figma 桌面版暴露的 MCP：在桌面端打开文件并进入 **Dev Mode**，在侧栏启用 MCP Server，将给出的本地地址（通常为 `http://127.0.0.1:3845/mcp`）按 Claude Code 文档配置为 HTTP MCP；具体见 [Figma Help：Desktop MCP server](https://help.figma.com/hc/en-us/articles/35281186390679-Figma-MCP-collection-How-to-setup-the-Figma-desktop-MCP-server-alternative)。
 
 
-### 上下文处理
+### 6.5 上下文处理
 --- 压缩上下文 
 ```bash
 /compact 
 ```
 --- 清除上下文
 ```bash
-/compact 
+/clear 
 ```
 ## 七、实践与规范
 
@@ -755,5 +819,5 @@ claude plugin install figma@claude-plugins-official
 
 ---
 
-*如果你想要深入学习claude code 推荐这个*[点击这里](https://imzbf.github.io/md-editor-v3/)
+*如果你想要深入学习claude code 推荐这个*[点击这里](https://github.com/luongnv89/claude-howto)
 
