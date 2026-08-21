@@ -12,67 +12,77 @@
     date   : none 
     -->
 
-    <div class="header" ref="headerDom">
-        <div class="inner-header">
-            <!-- <div class="row align-middle justify-between">
+    <div class="home_page">
+        <div class="header" ref="headerDom">
+            <div class="inner-header">
+                <!-- <div class="row align-middle justify-between">
         <img class="logoImg" src="@/assets/img/logo.png" alt="" />
       </div>
       <div>123123</div> -->
-            <div class="positionBox">
-                <div class="row align-middle" @click="goHomePage">
-                    <img class="logoImg" src="@/assets/img/logo.png" alt="" />
-                    <p class="fs-40 my-ml-10">LeonardeDAna's Blog</p>
-                </div>
-                <div class="operation">
-                    <span @click="goBlog">日志</span>
-                    <span>技术文档</span>
-                    <span>摘要</span>
+                <div class="positionBox">
+                    <div class="row align-middle" @click="goHomePage">
+                        <img
+                            class="logoImg"
+                            src="@/assets/img/logo.png"
+                            alt="" />
+                        <p class="fs-40 my-ml-10">LeonardeDAna's Blog</p>
+                    </div>
+                    <div class="operation">
+                        <span @click="goBlog">日志</span>
+                        <span>技术文档</span>
+                        <span>摘要</span>
+                    </div>
                 </div>
             </div>
+            <div>
+                <svg
+                    class="waves"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 24 150 28"
+                    preserveAspectRatio="none"
+                    shape-rendering="auto">
+                    <defs>
+                        <path
+                            id="gentle-wave"
+                            d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                    </defs>
+                    <g class="parallax">
+                        <use
+                            xlink:href="#gentle-wave"
+                            x="48"
+                            y="0"
+                            fill="rgba(255,255,255,0.7" />
+                        <use
+                            xlink:href="#gentle-wave"
+                            x="48"
+                            y="3"
+                            fill="rgba(255,255,255,0.5)" />
+                        <use
+                            xlink:href="#gentle-wave"
+                            x="48"
+                            y="5"
+                            fill="rgba(255,255,255,0.3)" />
+                        <use
+                            xlink:href="#gentle-wave"
+                            x="48"
+                            y="7"
+                            fill="#fff" />
+                    </g>
+                </svg>
+            </div>
+            <!--Waves end-->
         </div>
-        <div>
-            <svg
-                class="waves"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                viewBox="0 24 150 28"
-                preserveAspectRatio="none"
-                shape-rendering="auto">
-                <defs>
-                    <path
-                        id="gentle-wave"
-                        d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-                </defs>
-                <g class="parallax">
-                    <use
-                        xlink:href="#gentle-wave"
-                        x="48"
-                        y="0"
-                        fill="rgba(255,255,255,0.7" />
-                    <use
-                        xlink:href="#gentle-wave"
-                        x="48"
-                        y="3"
-                        fill="rgba(255,255,255,0.5)" />
-                    <use
-                        xlink:href="#gentle-wave"
-                        x="48"
-                        y="5"
-                        fill="rgba(255,255,255,0.3)" />
-                    <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
-                </g>
-            </svg>
-        </div>
-        <!--Waves end-->
-    </div>
-    <div class="footer_container">
-        <a
-            class="icp_link"
-            href="https://beian.miit.gov.cn/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >沪ICP备2025130361号</a
-        >
+        <!-- 首页自定义 footer（不走 layout） -->
+        <footer class="home_footer">
+            <a
+                class="icp_link"
+                href="https://beian.miit.gov.cn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >沪ICP备2025130361号</a
+            >
+        </footer>
     </div>
 </template>
 
@@ -228,6 +238,11 @@ h1 {
     font-size: 48px;
 }
 
+.home_page {
+    position: relative;
+    min-height: 100vh;
+    background-color: #fff;
+}
 .header {
     position: relative;
     //   text-align: center;
@@ -237,7 +252,7 @@ h1 {
         rgba(0, 172, 193, 1) 100%
     );
     color: white;
-    height: 100%;
+    min-height: 100vh;
 }
 .logo {
     width: 50px;
@@ -335,16 +350,24 @@ h1 {
         font-size: 24px;
     }
 }
-.footer_container {
+/** 首页底部备案：叠在波浪下方白色区域，不使用 layout/footer */
+.home_footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 40px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
     .icp_link {
         font-size: 12px;
-        color: #666666;
+        color: #999999;
         text-decoration: none;
         &:hover {
-            color: #333333;
+            color: #666666;
             text-decoration: underline;
         }
     }

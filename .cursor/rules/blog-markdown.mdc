@@ -1,0 +1,11 @@
+---
+description: 博客 Markdown 文章列表与新增文章约定
+globs: src/assets/md/**/*,src/view/blog/**/*.vue,src/view/blogList/**/*.vue
+alwaysApply: false
+---
+
+# 博客与 Markdown
+
+- 文章列表：`src/assets/md/index.js`，项字段：`id`、`path`（import 的 md）、`name`、`updateTime`、`description`、`tags`
+- 新增文章：在 `src/assets/md/` 建 `.md`，在 `index.js` 中 import 并加入 `list`
+- Vite：`vite-plugin-md` + `assetsInclude: ['**/*.md']`；部分页面用 `?raw` 导入，以具体实现为准

@@ -1,0 +1,26 @@
+---
+description: 路由约定与新增独立页面步骤
+globs: src/router/**/*.{js,ts},src/view/**/*.vue,src/layout/**/*.vue
+alwaysApply: false
+---
+
+# 路由与页面约定
+
+## 路由结构
+
+- **首页** `/` → `view/home/index.vue`（无 layout）
+- **带 layout**：`routerData.js` 中 `component: layout` + `children`（如 `/blog`、`/tools`）
+- **扁平独立页**：`routerData` 直接懒加载 `component`，路径勿与 children 冲突
+- 部分 `name`/`path` 有重复或占位（如 lifecycle → overflowAuto），改前全局搜索引用
+
+## 新增独立页面
+
+1. 在 `src/view/<name>/` 新增页面（常见 `index.vue`）
+2. 在 `routerData.js` 增加：`path`、懒加载 `component`，可选 `name`、`label`、`tags`、`icon`
+3. 若需首页/侧栏展示，同步 `view/home`、`layout/header` 或 `stores/modules/menu.js`
+
+## 布局注意
+
+- `layout`：`#main_container` 为可滚动主区；header 离开顶部时收起；底部用 `layout/footer`（ICP 备案）
+- **首页** `/` 不走 layout，备案用页面内自定义 `home_footer`，勿复用 layout footer
+- 博客目录滚动与 `#main_container` 联动（`view/blog` 中 `MdCatalog` 的 `scrollElement`）

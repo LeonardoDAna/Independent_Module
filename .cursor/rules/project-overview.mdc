@@ -1,0 +1,38 @@
+---
+description: Independent_Module 项目定位、技术栈、目录与常用命令
+alwaysApply: true
+---
+
+# Independent_Module 项目概览
+
+学习 / demo 型 **Vue 3 + Vite** 单页应用：个人博客（Markdown）、Canvas/工具模块、独立路由页。`package.json` 名为 `arcsmartenergy2-0`（历史包名），以仓库实际内容为准。
+
+## 技术栈
+
+- Vue 3 + Vite 4（`type: "module"`），路径别名 `@` → `src`
+- Vue Router 4，**Hash 模式**（`createWebHashHistory`）
+- 状态：Pinia（`src/stores`）；依赖里虽有 vuex，入口**仅用 Pinia**，勿轻易删
+- UI：ant-design-vue 3 + 全局 zhCN / dayjs 中文
+- 样式：SCSS（`src/assets/style`）；博客：`md-editor-v3` + `vite-plugin-md`
+- Node：README 写 v14+；新环境优先 **Node 18+**
+
+## 命令
+
+```bash
+pnpm install   # 或 npm install
+pnpm run dev   # host 局域网可访问、自动打开
+pnpm run build
+pnpm run preview
+```
+
+## 关键目录
+
+```text
+src/main.js、App.vue
+src/router/          # index.js + routerData.js
+src/layout/          # header / footer（layout 页 ICP）；首页备案在 view/home 自定义 footer
+src/view/            # 功能页
+src/components/、stores/、utils/
+src/assets/md/       # 博客 Markdown + index.js 列表
+src/assets/style/    # global.scss、commons.scss
+```
