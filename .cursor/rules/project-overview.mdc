@@ -13,7 +13,7 @@ alwaysApply: true
 - Vue Router 4，**Hash 模式**（`createWebHashHistory`）
 - 状态：Pinia（`src/stores`）；依赖里虽有 vuex，入口**仅用 Pinia**，勿轻易删
 - UI：ant-design-vue 3 + 全局 zhCN / dayjs 中文
-- 样式：SCSS（`src/assets/style`）；博客：`md-editor-v3` + `vite-plugin-md`
+- 样式：SCSS（`src/assets/style`）；博客：`md-editor-v3` 预览 + Markdown `?raw` 导入
 - Node：README 写 v14+；新环境优先 **Node 18+**
 
 ## 命令

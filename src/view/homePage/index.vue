@@ -1,11 +1,5 @@
 <template>
   <div class="all">
-    <header class="headerStyle">
-      <!-- 提交热力图 -->
-      <div class="heatMap">
-        <calendar-heatmap end-date="2021-07-08" :values="timeValue" />
-      </div>
-    </header>
     <div class="">
       <div
         class="outsideBox"
@@ -41,19 +35,6 @@ export default {
   data() {
     return {
       datas: routerData,
-      timeValue: [
-        { date: "2020-08-05", count: 6 },
-        { date: "2020-08-06", count: 6 },
-        { date: "2020-08-07", count: 6 },
-        { date: "2020-08-08", count: 6 },
-        { date: "2020-08-15", count: 6 },
-        { date: "2020-08-22", count: 6 },
-        { date: "2020-08-29", count: 6 },
-        { date: "2020-09-05", count: 6 },
-        { date: "2020-09-28", count: 6 },
-        { date: "2020-09-22", count: 6 },
-        { date: "2020-09-23", count: 6 },
-      ],
     };
   },
   methods: {
@@ -61,18 +42,10 @@ export default {
       this.$router.push(link);
     },
   },
-  created() {},
-  mounted() {
-    console.log(this.datas);
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-.heatMap {
-  width: 60%;
-  margin: 0 auto;
-}
 .all {
   // height: 100vh;
   /* display: flex;

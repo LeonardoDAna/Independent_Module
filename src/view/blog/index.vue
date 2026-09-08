@@ -7,7 +7,6 @@
       <div class="editorBlock" ref="scrollElement">
         <MdPreview
           :modelValue="setupData.text"
-          @onGetCatalog="getCatalo"
           :editorId="editorId"
         />
       </div>
@@ -25,23 +24,21 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, nextTick } from "vue";
-// import text from "@/assets/md/test.md?raw";
-import Icon, { DownOutlined, UpOutlined } from "@ant-design/icons-vue";
+import { reactive, ref, watch, nextTick } from "vue";
+import { MdPreview, MdCatalog } from "md-editor-v3";
+import "md-editor-v3/lib/preview.css";
+import { message } from "ant-design-vue";
 import { useRouter, useRoute } from "vue-router";
 import blogList from "@/assets/md/index";
+
 const router = useRouter();
 const route = useRoute();
-const mdHeadingId = (_text, _level, index) => `heading-${index}`;
 
 const setupData = reactive({
   text: "",
-  expand: true,
 });
 
-const blog = ref();
 const editorId = "preview-only";
-const theme = "dark";
 const scrollElement = ref();
 /** @type {import('vue').Ref<HTMLElement | null>} */
 const navBlockRef = ref(null);
@@ -73,105 +70,23 @@ function onCatalogActive(_tocItem, linkEl) {
   });
 }
 
-onMounted(async () => {
-  setupData.text = await getBlogFile();
-  await nextTick();
-});
-
-const getBlogFile = async () => {
-  return new Promise((resolve, reject) => {
-    try {
-      let content = blogList.find((e) => e.id == route.params.id);
-      fetch(content.path).then((response) => {
-        resolve(response.text());
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-
-const getCatalo = (titles) => {
-  console.log(titles, "getCatalo");
-
-  setupData.titles = titles
-    .filter((e) => e.level < 3)
-    .map((el) => {
-      return {
-        title: el.text,
-        indent: el.level - 1,
-        line: el.line,
-      };
-    });
-};
-
-const getAnchors = () => {
-  const anchors = preview.value.$el.querySelectorAll("h1,h2,h3,h4,h5,h6");
-  console.log(anchors);
-
-  let titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
-
-  if (!titles.length) {
-    titles = [];
+/**
+ * 按路由 id 加载 Markdown 正文；找不到文章时提示并回列表。
+ */
+function loadBlog() {
+  const article = blogList.find((e) => String(e.id) === String(route.params.id));
+  if (!article) {
+    setupData.text = "";
+    message.warning("文章不存在");
+    router.replace("/blog");
     return;
   }
+  setupData.text = article.content;
+}
 
-  const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort();
-
-  setupData.titles = titles.map((el) => ({
-    title: el.innerText,
-    lineIndex: el.getAttribute("data-v-md-line"),
-    indent: hTags.indexOf(el.tagName),
-  }));
-};
-
-const handleAnchorClick = (anchor) => {
-  const { line } = anchor;
-  const heading = preview.value.$el.querySelector(`[data-line="${line}"]`);
-  console.log(heading);
-
-  const selectedCatalog = document.querySelector(".selectedCatalog");
-
-  let index = setupData.titles.findIndex((item) => item.line === line);
-  if (heading) {
-    selectedCatalog.style.op = `${index * 42}px`;
-
-    heading.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-      inline: "nearest", // 'start', 'center', 'end', or 'nearest'
-    });
-  }
-};
+watch(() => route.params.id, loadBlog, { immediate: true });
 </script>
 <style lang="scss" scoped>
-.catalog-list {
-  position: relative;
-}
-.selectedCatalog {
-  position: absolute;
-  height: 42px;
-  transition: all 0.3s;
-  top: 0;
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: -8px;
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    border-right: -5px solid transparent;
-    border-left: 5px solid rgb(255, 114, 114);
-    transform: translate(-50%, -50%);
-  }
-}
-.anchorTitle {
-  cursor: pointer;
-  color: #141414ff;
-  position: relative;
-}
 .content {
   width: 100%;
   margin-top: 30px;
@@ -183,7 +98,7 @@ const handleAnchorClick = (anchor) => {
 .editorBlock {
   padding: 20px;
   width: 50%;
-  background-color: #ffffff;  
+  background-color: #ffffff;
   :deep(.md-editor-preview) {
     img {
       width: 100%;
@@ -192,8 +107,8 @@ const handleAnchorClick = (anchor) => {
       border-radius: 8px;
       margin: 16px 0;
     }
-    table{
-        width: 100%;
+    table {
+      width: 100%;
     }
   }
 }
@@ -235,33 +150,8 @@ const handleAnchorClick = (anchor) => {
     background: transparent;
   }
 }
-.catalog {
-  position: absolute;
-  position: -webkit-sticky;
-  overflow: auto;
-  top: 30px;
-  // border: 1px solid #222;
-  background-color: #ffffff;
-  border-radius: 2px;
-  &::-webkit-scrollbar {
-    height: 0;
-    width: 0;
-  }
-}
 .userInfo {
   width: 150px;
   // border: 1px solid #222;
-}
-.catalog-title {
-  display: flex;
-  font-size: 20px;
-  justify-content: space-between;
-  .direction {
-    color: #8a919f;
-    cursor: pointer;
-  }
-}
-.ant-divider-horizontal {
-  margin: 12px 0;
 }
 </style>
